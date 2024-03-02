@@ -8,15 +8,10 @@
 import Foundation
 
 struct Activity: Hashable {
-    var name: String
-    var type: String
-    var location: String
-    var isFavorite: Bool
-    
-    init(name: String, type: String, location: String, isFavorite: Bool) {
-        self.name = name
-        self.type = type
-        self.location = location
-        self.isFavorite = isFavorite
-    }
+    var name = ""
+    var type = ""
+    var location = ""
+    var description = ""
+    var phoneNumber = ""
+    var isFavorite = false
 }

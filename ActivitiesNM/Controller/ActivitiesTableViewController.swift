@@ -14,42 +14,56 @@ class ActivitiesTableViewController: UITableViewController {
             name: "Royal",
             type: "Billiard Club",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         ),
         Activity(
             name: "Khabarovsk",
             type: "Cinema",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         ),
         Activity(
             name: "Hollywood",
             type: "Cinema",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         ),
         Activity(
             name: "Volkonsky",
             type: "Shooting complex",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         ),
         Activity(
             name: "Time Quest",
             type: "Quest",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         ),
         Activity(
             name: "VR GameClub",
             type: "Virtual Reality Club",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         ),
         Activity(
             name: "Spartak",
             type: "Ski resort",
             location: "Russia, Khabarovsk",
+            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
+            phoneNumber: "+7(999)999-99-99",
             isFavorite: false
         )
     ]
@@ -57,6 +71,8 @@ class ActivitiesTableViewController: UITableViewController {
     //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
                 
         var snapshot = NSDiffableDataSourceSnapshot<Categoties, Activity>()
         snapshot.appendSections([.activities])
@@ -65,9 +81,8 @@ class ActivitiesTableViewController: UITableViewController {
         dataSource.apply(snapshot)
         
         tableView.dataSource = dataSource
-        
-//        tableView.cellLayoutMarginsFollowReadableWidth = true
     }
+    
     //MARK: - UITableView Diffable Data Source
     func configureDataSource() -> ActivityTableViewDiffableDataSource {
                 
@@ -91,47 +106,47 @@ class ActivitiesTableViewController: UITableViewController {
     lazy var dataSource = configureDataSource()
     
     //MARK: - UITableViewDelegate Protocol
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let favoriteActionTitle = activities[indexPath.row].isFavorite ? "Удалить из избранного" : "Добавить в избранное"
-
-        
-        let optionMenu = UIAlertController(title: nil, message: "Что бы Вы хотели сделать?", preferredStyle: .actionSheet)
-        
-        optionMenu.addAction(UIAlertAction(title: "Отменить", style: .cancel))
-        
-        let reserveAction = UIAlertAction(title: "Записаться", style: .default) { action in
-            
-            let alertMessage = UIAlertController(title: "Временно не доступно", message: "К сожалению данная активность не доступна в настоящее время. Пожалуйста, повторите позже.", preferredStyle: .alert)
-            
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .cancel))
-            
-            self.present(alertMessage, animated: true)
-        }
-        optionMenu.addAction(reserveAction)
-        
-        let favoriteAction = UIAlertAction(title: favoriteActionTitle, style: .default) { action in
-            
-            let cell = tableView.cellForRow(at: indexPath) as! ActivitiesTableViewCell
-            
-            cell.favoriteImageView.isHidden = self.activities[indexPath.row].isFavorite
-            
-            self.activities[indexPath.row].isFavorite = !self.activities[indexPath.row].isFavorite
-            
-        }
-        optionMenu.addAction(favoriteAction)
-        
-        if let popoverController = optionMenu.popoverPresentationController {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                popoverController.sourceView = cell
-                popoverController.sourceRect = cell.bounds
-            }
-        }
-        
-        present(optionMenu, animated: true)
-        
-        tableView.deselectRow(at: indexPath, animated: false)
-    }
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        
+//        let favoriteActionTitle = activities[indexPath.row].isFavorite ? "Удалить из избранного" : "Добавить в избранное"
+//
+//        
+//        let optionMenu = UIAlertController(title: nil, message: "Что бы Вы хотели сделать?", preferredStyle: .actionSheet)
+//        
+//        optionMenu.addAction(UIAlertAction(title: "Отменить", style: .cancel))
+//        
+//        let reserveAction = UIAlertAction(title: "Записаться", style: .default) { action in
+//            
+//            let alertMessage = UIAlertController(title: "Временно не доступно", message: "К сожалению данная активность не доступна в настоящее время. Пожалуйста, повторите позже.", preferredStyle: .alert)
+//            
+//            alertMessage.addAction(UIAlertAction(title: "OK", style: .cancel))
+//            
+//            self.present(alertMessage, animated: true)
+//        }
+//        optionMenu.addAction(reserveAction)
+//        
+//        let favoriteAction = UIAlertAction(title: favoriteActionTitle, style: .default) { action in
+//            
+//            let cell = tableView.cellForRow(at: indexPath) as! ActivitiesTableViewCell
+//            
+//            cell.favoriteImageView.isHidden = self.activities[indexPath.row].isFavorite
+//            
+//            self.activities[indexPath.row].isFavorite = !self.activities[indexPath.row].isFavorite
+//            
+//        }
+//        optionMenu.addAction(favoriteAction)
+//        
+//        if let popoverController = optionMenu.popoverPresentationController {
+//            if let cell = tableView.cellForRow(at: indexPath) {
+//                popoverController.sourceView = cell
+//                popoverController.sourceRect = cell.bounds
+//            }
+//        }
+//        
+//        present(optionMenu, animated: true)
+//        
+//        tableView.deselectRow(at: indexPath, animated: false)
+//    }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
@@ -201,6 +216,15 @@ class ActivitiesTableViewController: UITableViewController {
         
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [favoriteAction])
         return swipeConfiguration
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showActivityDetail" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let destinationController = segue.destination as! ActivityDetailViewController
+                destinationController.activity = self.activities[indexPath.row]
+            }
+        }
     }
     
 }
