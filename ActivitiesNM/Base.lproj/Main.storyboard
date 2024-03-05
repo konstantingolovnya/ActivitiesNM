@@ -287,7 +287,7 @@
         <!--Navigation Controller-->
         <scene sceneID="eHX-8t-zYS">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wef-OT-YxZ" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wef-OT-YxZ" customClass="NavigationController" customModule="ActivitiesNM" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="YSN-aG-ub7">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>

@@ -31,9 +31,16 @@ class ActivityDetailViewController: UIViewController {
         tableView.dataSource = self
         
         tableView.separatorStyle = .none
+        tableView.contentInsetAdjustmentBehavior = .never
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.hidesBarsOnSwipe = true
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 }
     
+
 
 //MARK: - UITableViewDelegate Protocol, UITableViewDataSource Protocol
 extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSource {

@@ -72,7 +72,24 @@ class ActivitiesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.hidesBarsOnSwipe = true
+        
+        navigationItem.backButtonTitle = ""
+        
+        if let appearance = navigationController?.navigationBar.standardAppearance {
+            appearance.configureWithTransparentBackground()
+            
+            if let font = UIFont(name: "Nunito-Bold", size: 45) {
+                appearance.titleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!]
+                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!, .font: font]
+            }
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.compactAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        }
+        
+        
                 
         var snapshot = NSDiffableDataSourceSnapshot<Categoties, Activity>()
         snapshot.appendSections([.activities])
@@ -81,6 +98,11 @@ class ActivitiesTableViewController: UITableViewController {
         dataSource.apply(snapshot)
         
         tableView.dataSource = dataSource
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.hidesBarsOnSwipe = true
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     //MARK: - UITableView Diffable Data Source
