@@ -72,9 +72,6 @@ class ActivitiesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationController?.hidesBarsOnSwipe = true
-        
         navigationItem.backButtonTitle = ""
         
         if let appearance = navigationController?.navigationBar.standardAppearance {

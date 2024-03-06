@@ -46,7 +46,7 @@ class ActivityDetailViewController: UIViewController {
 extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,6 +55,7 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailTextCell.self), for: indexPath) as! ActivityDetailTextCell
             cell.descriptionLabel.text = activity.description
+            cell.selectionStyle = .none
             return cell
             
         case 1:
@@ -63,10 +64,24 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
             cell.column1TextLabel.text = activity.location
             cell.column2TitleLabel.text = "Телефон"
             cell.column2TextLabel.text = activity.phoneNumber
+            cell.selectionStyle = .none
+            return cell
+            
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailMapCell.self), for: indexPath) as! ActivityDetailMapCell
+            cell.configure(location: activity.location)
+            cell.selectionStyle = .none
             return cell
             
         default:
             fatalError("Failed to instantiate the table view cell for detail view controller")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showMap" {
+            let destinationCintroller = segue.destination as! MapViewController
+            destinationCintroller.activity = activity
         }
     }
 }

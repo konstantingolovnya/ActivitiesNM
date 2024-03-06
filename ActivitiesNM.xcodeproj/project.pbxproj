@@ -24,6 +24,8 @@
 		B5ECD3542B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3532B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift */; };
 		B5ECD35C2B95A1BA005B5F53 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD35B2B95A1BA005B5F53 /* UIColorExtension.swift */; };
 		B5ECD35E2B95A551005B5F53 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD35D2B95A551005B5F53 /* NavigationController.swift */; };
+		B5ECD3642B97DA7D005B5F53 /* ActivityDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */; };
+		B5ECD3662B97DF72005B5F53 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3652B97DF72005B5F53 /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		B5ECD3532B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailTwoColumnCell.swift; sourceTree = "<group>"; };
 		B5ECD35B2B95A1BA005B5F53 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		B5ECD35D2B95A551005B5F53 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailMapCell.swift; sourceTree = "<group>"; };
+		B5ECD3652B97DF72005B5F53 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,7 @@
 				B56E13A32B8C0B3C005B027C /* ActivitiesTableViewController.swift */,
 				B5ECD3372B901290005B5F53 /* ActivityDetailViewController.swift */,
 				B5ECD35D2B95A551005B5F53 /* NavigationController.swift */,
+				B5ECD3652B97DF72005B5F53 /* MapViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -110,6 +115,7 @@
 				B5ECD34F2B91A371005B5F53 /* ActivityDetailHeaderView.swift */,
 				B5ECD3512B92CF99005B5F53 /* ActivityDetailTextCell.swift */,
 				B5ECD3532B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift */,
+				B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -221,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5ECD3642B97DA7D005B5F53 /* ActivityDetailMapCell.swift in Sources */,
 				B56E13A62B8C116B005B027C /* ActivitiesTableViewCell.swift in Sources */,
 				B5ECD35E2B95A551005B5F53 /* NavigationController.swift in Sources */,
 				B56E13A42B8C0B3C005B027C /* ActivitiesTableViewController.swift in Sources */,
@@ -233,6 +240,7 @@
 				B5ECD35C2B95A1BA005B5F53 /* UIColorExtension.swift in Sources */,
 				B56E13922B8C0AD7005B027C /* SceneDelegate.swift in Sources */,
 				B5ECD3522B92CF99005B5F53 /* ActivityDetailTextCell.swift in Sources */,
+				B5ECD3662B97DF72005B5F53 /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

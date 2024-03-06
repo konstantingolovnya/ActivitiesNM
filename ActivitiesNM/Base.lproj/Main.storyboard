@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -104,11 +105,11 @@
             <objects>
                 <viewController id="loL-md-jgU" customClass="ActivityDetailViewController" customModule="ActivitiesNM" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jRS-QN-e1x">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="1000"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="nf4-FH-JnE">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="1000"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="6oH-7o-PrU" userLabel="Header View" customClass="ActivityDetailHeaderView" customModule="ActivitiesNM" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="445"/>
@@ -262,6 +263,35 @@
                                             <outlet property="column2TitleLabel" destination="hWA-6q-gUj" id="0LR-T3-Oj2"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActivityDetailMapCell" id="VBq-Lm-62o" customClass="ActivityDetailMapCell" customModule="ActivitiesNM" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="610.66666793823242" width="393" height="222.33332824707031"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VBq-Lm-62o" id="lMd-A1-AXB">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="222.33332824707031"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QHp-0X-AYK">
+                                                    <rect key="frame" x="20" y="11" width="353" height="200.33333333333334"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200.33000000000001" id="9Q9-o3-Lb0"/>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="Ntx-9d-2WV"/>
+                                                        <constraint firstAttribute="height" constant="200" id="o10-aW-QFi"/>
+                                                    </constraints>
+                                                    <standardMapConfiguration key="preferredConfiguration"/>
+                                                </mapView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="QHp-0X-AYK" firstAttribute="leading" secondItem="lMd-A1-AXB" secondAttribute="leadingMargin" id="GFJ-rc-tcC"/>
+                                                <constraint firstItem="QHp-0X-AYK" firstAttribute="top" secondItem="lMd-A1-AXB" secondAttribute="topMargin" id="QDn-J1-IBX"/>
+                                                <constraint firstItem="QHp-0X-AYK" firstAttribute="trailing" secondItem="lMd-A1-AXB" secondAttribute="trailingMargin" id="ien-Pp-hf6"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="QHp-0X-AYK" secondAttribute="bottom" id="yD6-zA-3It"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="mapView" destination="QHp-0X-AYK" id="CmS-Eq-agP"/>
+                                            <segue destination="fLc-OG-3A7" kind="show" identifier="showMap" id="voy-KI-93p"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
@@ -275,6 +305,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="o8o-8i-t68"/>
+                    <size key="freeformSize" width="393" height="1000"/>
                     <connections>
                         <outlet property="headerView" destination="6oH-7o-PrU" id="LLa-px-H7z"/>
                         <outlet property="tableView" destination="nf4-FH-JnE" id="g67-r7-Cgc"/>
@@ -283,6 +314,37 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ubq-PS-ZBg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1619.0839694656488" y="46.478873239436624"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="AEQ-Y2-YAI">
+            <objects>
+                <viewController id="fLc-OG-3A7" customClass="MapViewController" customModule="ActivitiesNM" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oys-qC-44Z">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5F-UY-dUl">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="VZm-sI-gnh"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="e5F-UY-dUl" firstAttribute="trailing" secondItem="VZm-sI-gnh" secondAttribute="trailing" id="9Ji-xb-UZo"/>
+                            <constraint firstItem="e5F-UY-dUl" firstAttribute="top" secondItem="oys-qC-44Z" secondAttribute="top" id="Igz-ov-7Zm"/>
+                            <constraint firstAttribute="bottom" secondItem="e5F-UY-dUl" secondAttribute="bottom" id="fm1-CF-hNL"/>
+                            <constraint firstItem="e5F-UY-dUl" firstAttribute="leading" secondItem="VZm-sI-gnh" secondAttribute="leading" id="y0H-2C-RON"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="iKV-h5-hgD"/>
+                    <connections>
+                        <outlet property="mapView" destination="e5F-UY-dUl" id="qF5-kO-KDc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Y9-2C-2fS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2420.6106870229005" y="-4.9295774647887329"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eHX-8t-zYS">
