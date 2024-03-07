@@ -26,6 +26,7 @@
 		B5ECD35E2B95A551005B5F53 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD35D2B95A551005B5F53 /* NavigationController.swift */; };
 		B5ECD3642B97DA7D005B5F53 /* ActivityDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */; };
 		B5ECD3662B97DF72005B5F53 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3652B97DF72005B5F53 /* MapViewController.swift */; };
+		B5ECD36A2B99E0F8005B5F53 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		B5ECD35D2B95A551005B5F53 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailMapCell.swift; sourceTree = "<group>"; };
 		B5ECD3652B97DF72005B5F53 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				B5ECD3372B901290005B5F53 /* ActivityDetailViewController.swift */,
 				B5ECD35D2B95A551005B5F53 /* NavigationController.swift */,
 				B5ECD3652B97DF72005B5F53 /* MapViewController.swift */,
+				B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 			files = (
 				B5ECD3642B97DA7D005B5F53 /* ActivityDetailMapCell.swift in Sources */,
 				B56E13A62B8C116B005B027C /* ActivitiesTableViewCell.swift in Sources */,
+				B5ECD36A2B99E0F8005B5F53 /* ReviewViewController.swift in Sources */,
 				B5ECD35E2B95A551005B5F53 /* NavigationController.swift in Sources */,
 				B56E13A42B8C0B3C005B027C /* ActivitiesTableViewController.swift in Sources */,
 				B5ECD3382B901291005B5F53 /* ActivityDetailViewController.swift in Sources */,

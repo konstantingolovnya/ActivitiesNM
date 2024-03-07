@@ -18,10 +18,12 @@ class ActivityDetailViewController: UIViewController {
         super.viewDidLoad()
         
         navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.backButtonTitle = ""
         
         headerView.headerImageView.image = UIImage(named: activity.name)
         headerView.nameLabel.text = activity.name
         headerView.typeLabel.text = activity.type
+
         
         let heartImage = activity.isFavorite ? "heart.fill" : "heart"
         headerView.heartButton.tintColor = activity.isFavorite ? .systemRed : .white
@@ -37,7 +39,36 @@ class ActivityDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.setNavigationBarHidden(false, animated: true)
+        
     }
+    
+    @IBAction func close(segue: UIStoryboardSegue) {
+        dismiss(animated: true)
+    }
+    
+    @IBAction func rateActivity(segue: UIStoryboardSegue) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+        
+        dismiss(animated: true) {
+            if let rating = Activity.Rating(rawValue: identifier) {
+                self.activity.rating = rating
+                self.headerView.ratingImage.image = UIImage(named: rating.image)
+                
+                let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+                self.headerView.ratingImage.alpha = 0
+                self.headerView.ratingImage.transform = scaleTransform
+                
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
+                    self.headerView.ratingImage.alpha = 1
+                    self.headerView.ratingImage.transform = .identity
+                }
+            }
+        }
+        
+    }
+    
 }
     
 
@@ -79,9 +110,16 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showMap" {
+        switch segue.identifier {
+        case "showMap":
             let destinationCintroller = segue.destination as! MapViewController
             destinationCintroller.activity = activity
+            
+        case "showReview":
+            let destinationController = segue.destination as! ReviewViewController
+            destinationController.activity = activity
+            
+        default: break
         }
     }
 }
