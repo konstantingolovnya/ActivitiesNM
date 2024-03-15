@@ -7,11 +7,11 @@
 
 import UIKit
 
-enum Categoties {
+enum Categories {
     case activities
 }
 
-class ActivityTableViewDiffableDataSource: UITableViewDiffableDataSource<Categoties, Activity> {
+class ActivityTableViewDiffableDataSource: UITableViewDiffableDataSource<Categories, Activity> {
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true

@@ -6,67 +6,14 @@
 //
 
 import UIKit
+import CoreData
 
 class ActivitiesTableViewController: UITableViewController {
     
-    var activities = [
-        Activity(
-            name: "Royal",
-            type: "Billiard Club",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        ),
-        Activity(
-            name: "Khabarovsk",
-            type: "Cinema",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        ),
-        Activity(
-            name: "Hollywood",
-            type: "Cinema",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        ),
-        Activity(
-            name: "Volkonsky",
-            type: "Shooting complex",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        ),
-        Activity(
-            name: "Time Quest",
-            type: "Quest",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        ),
-        Activity(
-            name: "VR GameClub",
-            type: "Virtual Reality Club",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        ),
-        Activity(
-            name: "Spartak",
-            type: "Ski resort",
-            location: "Russia, Khabarovsk",
-            description: "Отличный кинотеатр где можно провести выходные и посмотреть кино всей семьей. Есть игровые зоны для детей и зона игровых автоматов. В вечернее время можно поиграть в боулинг или бильярд",
-            phoneNumber: "+7(999)999-99-99",
-            isFavorite: false
-        )
-    ]
+    @IBOutlet var emptyRestaurantView: UIImageView!
+    var activities: [Activity] = []
+
+    var fetchResultController : NSFetchedResultsController<Activity>!
     
     //MARK: - View controller life cycle
     override func viewDidLoad() {
@@ -86,20 +33,50 @@ class ActivitiesTableViewController: UITableViewController {
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
         }
         
-        
-                
-        var snapshot = NSDiffableDataSourceSnapshot<Categoties, Activity>()
-        snapshot.appendSections([.activities])
-        snapshot.appendItems(activities, toSection: .activities)
-        
-        dataSource.apply(snapshot)
-        
         tableView.dataSource = dataSource
+        
+        tableView.backgroundView = emptyRestaurantView
+        
+        fetchActivityData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    //MARK: - Fetch Data
+    func fetchActivityData() {
+        let fetchRequest = Activity.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let context = appDelegate.persistentContainer.viewContext
+            fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+            fetchResultController.delegate = self
+            
+            do {
+                try fetchResultController.performFetch()
+                updateSnapshot()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func updateSnapshot() {
+        if let fetchedObjects = fetchResultController.fetchedObjects {
+            activities = fetchedObjects
+        }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Categories, Activity>()
+        snapshot.appendSections([.activities])
+        snapshot.appendItems(activities, toSection: .activities)
+        
+        dataSource.apply(snapshot)
+        
+        tableView.backgroundView?.isHidden = !activities.isEmpty
     }
     
     //MARK: - UITableView Diffable Data Source
@@ -111,7 +88,7 @@ class ActivitiesTableViewController: UITableViewController {
                         
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ActivitiesTableViewCell
             
-            cell.presentationImageView.image = UIImage(named: activity.name)
+            cell.presentationImageView.image = UIImage(data: activity.image)
             cell.nameLabel.text = activity.name
             cell.locationLabel.text = activity.location
             cell.typeLabel.text = activity.type
@@ -125,48 +102,6 @@ class ActivitiesTableViewController: UITableViewController {
     lazy var dataSource = configureDataSource()
     
     //MARK: - UITableViewDelegate Protocol
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        
-//        let favoriteActionTitle = activities[indexPath.row].isFavorite ? "Удалить из избранного" : "Добавить в избранное"
-//
-//        
-//        let optionMenu = UIAlertController(title: nil, message: "Что бы Вы хотели сделать?", preferredStyle: .actionSheet)
-//        
-//        optionMenu.addAction(UIAlertAction(title: "Отменить", style: .cancel))
-//        
-//        let reserveAction = UIAlertAction(title: "Записаться", style: .default) { action in
-//            
-//            let alertMessage = UIAlertController(title: "Временно не доступно", message: "К сожалению данная активность не доступна в настоящее время. Пожалуйста, повторите позже.", preferredStyle: .alert)
-//            
-//            alertMessage.addAction(UIAlertAction(title: "OK", style: .cancel))
-//            
-//            self.present(alertMessage, animated: true)
-//        }
-//        optionMenu.addAction(reserveAction)
-//        
-//        let favoriteAction = UIAlertAction(title: favoriteActionTitle, style: .default) { action in
-//            
-//            let cell = tableView.cellForRow(at: indexPath) as! ActivitiesTableViewCell
-//            
-//            cell.favoriteImageView.isHidden = self.activities[indexPath.row].isFavorite
-//            
-//            self.activities[indexPath.row].isFavorite = !self.activities[indexPath.row].isFavorite
-//            
-//        }
-//        optionMenu.addAction(favoriteAction)
-//        
-//        if let popoverController = optionMenu.popoverPresentationController {
-//            if let cell = tableView.cellForRow(at: indexPath) {
-//                popoverController.sourceView = cell
-//                popoverController.sourceRect = cell.bounds
-//            }
-//        }
-//        
-//        present(optionMenu, animated: true)
-//        
-//        tableView.deselectRow(at: indexPath, animated: false)
-//    }
-    
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         guard let activity = self.dataSource.itemIdentifier(for: indexPath) else {
@@ -175,9 +110,14 @@ class ActivitiesTableViewController: UITableViewController {
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { action, sourceView, complitionHandler in
             
-            var snapshot = self.dataSource.snapshot()
-            snapshot.deleteItems([activity])
-            self.dataSource.apply(snapshot, animatingDifferences: true)
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                let context = appDelegate.persistentContainer.viewContext
+                
+                context.delete(activity)
+                appDelegate.saveContext()
+                
+                self.updateSnapshot()
+            }
             
             complitionHandler(true)
         }
@@ -237,6 +177,7 @@ class ActivitiesTableViewController: UITableViewController {
         return swipeConfiguration
     }
     
+    //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showActivityDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
@@ -246,4 +187,16 @@ class ActivitiesTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func unwindToHome(seque: UIStoryboardSegue) {
+        dismiss(animated: true)
+    }
+    
+    
+}
+
+//MARK: - NSFetchedResultsControllerDelegate Protocol
+extension ActivitiesTableViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        updateSnapshot()
+    }
 }

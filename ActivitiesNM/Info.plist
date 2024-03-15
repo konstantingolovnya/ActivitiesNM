@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Пожалуйста, предоставьте доступ к библиотеке для того чтобы выбрать фото.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Пожалуйста, предоставьте доступ к камере для того чтобы сделать фото.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UIAppFonts</key>

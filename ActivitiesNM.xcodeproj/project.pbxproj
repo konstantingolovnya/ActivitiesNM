@@ -27,6 +27,9 @@
 		B5ECD3642B97DA7D005B5F53 /* ActivityDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */; };
 		B5ECD3662B97DF72005B5F53 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3652B97DF72005B5F53 /* MapViewController.swift */; };
 		B5ECD36A2B99E0F8005B5F53 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */; };
+		B5ECD3702BA0067A005B5F53 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD36F2BA0067A005B5F53 /* RoundedTextField.swift */; };
+		B5ECD3722BA0081A005B5F53 /* NewActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3712BA0081A005B5F53 /* NewActivityController.swift */; };
+		B5FB85A92BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5FB85A72BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,9 @@
 		B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailMapCell.swift; sourceTree = "<group>"; };
 		B5ECD3652B97DF72005B5F53 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		B5ECD36F2BA0067A005B5F53 /* RoundedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
+		B5ECD3712BA0081A005B5F53 /* NewActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewActivityController.swift; sourceTree = "<group>"; };
+		B5FB85A82BA2B21E0085D241 /* ActivitiesNM.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ActivitiesNM.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +101,7 @@
 				B56E13982B8C0AD8005B027C /* Assets.xcassets */,
 				B56E139A2B8C0AD8005B027C /* LaunchScreen.storyboard */,
 				B56E139D2B8C0AD8005B027C /* Info.plist */,
+				B5FB85A72BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld */,
 			);
 			path = ActivitiesNM;
 			sourceTree = "<group>";
@@ -107,6 +114,7 @@
 				B5ECD35D2B95A551005B5F53 /* NavigationController.swift */,
 				B5ECD3652B97DF72005B5F53 /* MapViewController.swift */,
 				B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */,
+				B5ECD3712BA0081A005B5F53 /* NewActivityController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -119,6 +127,7 @@
 				B5ECD3512B92CF99005B5F53 /* ActivityDetailTextCell.swift */,
 				B5ECD3532B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift */,
 				B5ECD3632B97DA7D005B5F53 /* ActivityDetailMapCell.swift */,
+				B5ECD36F2BA0067A005B5F53 /* RoundedTextField.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -241,10 +250,13 @@
 				B5ECD3502B91A371005B5F53 /* ActivityDetailHeaderView.swift in Sources */,
 				B5ECD3542B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift in Sources */,
 				B56E13AD2B8C5F79005B027C /* Activity.swift in Sources */,
+				B5ECD3702BA0067A005B5F53 /* RoundedTextField.swift in Sources */,
 				B5ECD35C2B95A1BA005B5F53 /* UIColorExtension.swift in Sources */,
 				B56E13922B8C0AD7005B027C /* SceneDelegate.swift in Sources */,
+				B5ECD3722BA0081A005B5F53 /* NewActivityController.swift in Sources */,
 				B5ECD3522B92CF99005B5F53 /* ActivityDetailTextCell.swift in Sources */,
 				B5ECD3662B97DF72005B5F53 /* MapViewController.swift in Sources */,
+				B5FB85A92BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +479,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B5FB85A72BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B5FB85A82BA2B21E0085D241 /* ActivitiesNM.xcdatamodel */,
+			);
+			currentVersion = B5FB85A82BA2B21E0085D241 /* ActivitiesNM.xcdatamodel */;
+			path = ActivitiesNM.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B56E13842B8C0AD7005B027C /* Project object */;
 }

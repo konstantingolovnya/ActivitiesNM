@@ -50,7 +50,7 @@ class MapViewController: UIViewController {
     }
 }
 
-//MARK: - MKMapViewDelegate
+//MARK: - MKMapViewDelegate Protocol
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

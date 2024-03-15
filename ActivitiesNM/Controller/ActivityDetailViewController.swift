@@ -11,6 +11,7 @@ class ActivityDetailViewController: UIViewController {
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: ActivityDetailHeaderView!
+    @IBOutlet var saveAsFavoriteButton: UIBarButtonItem!
     
     var activity = Activity()
     
@@ -20,20 +21,21 @@ class ActivityDetailViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.backButtonTitle = ""
         
-        headerView.headerImageView.image = UIImage(named: activity.name)
+        headerView.headerImageView.image = UIImage(data: activity.image)
         headerView.nameLabel.text = activity.name
         headerView.typeLabel.text = activity.type
-
         
-        let heartImage = activity.isFavorite ? "heart.fill" : "heart"
-        headerView.heartButton.tintColor = activity.isFavorite ? .systemRed : .white
-        headerView.heartButton.setImage(UIImage(named: heartImage), for: .normal)
+        showFavoriteImage()
         
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.separatorStyle = .none
         tableView.contentInsetAdjustmentBehavior = .never
+        
+        if let rating = activity.rating {
+            headerView.ratingImage.image = UIImage(named: rating.image)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,6 +44,7 @@ class ActivityDetailViewController: UIViewController {
         
     }
     
+    //MARK: - Navigation
     @IBAction func close(segue: UIStoryboardSegue) {
         dismiss(animated: true)
     }
@@ -56,56 +59,19 @@ class ActivityDetailViewController: UIViewController {
                 self.activity.rating = rating
                 self.headerView.ratingImage.image = UIImage(named: rating.image)
                 
-                let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                self.headerView.ratingImage.alpha = 0
-                self.headerView.ratingImage.transform = scaleTransform
-                
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
-                    self.headerView.ratingImage.alpha = 1
-                    self.headerView.ratingImage.transform = .identity
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                    appDelegate.saveContext()
                 }
             }
-        }
-        
-    }
-    
-}
-    
-
-
-//MARK: - UITableViewDelegate Protocol, UITableViewDataSource Protocol
-extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
             
-        case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailTextCell.self), for: indexPath) as! ActivityDetailTextCell
-            cell.descriptionLabel.text = activity.description
-            cell.selectionStyle = .none
-            return cell
+            let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.headerView.ratingImage.alpha = 0
+            self.headerView.ratingImage.transform = scaleTransform
             
-        case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailTwoColumnCell.self), for: indexPath) as! ActivityDetailTwoColumnCell
-            cell.column1TitleLabel.text = "Адрес"
-            cell.column1TextLabel.text = activity.location
-            cell.column2TitleLabel.text = "Телефон"
-            cell.column2TextLabel.text = activity.phoneNumber
-            cell.selectionStyle = .none
-            return cell
-            
-        case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailMapCell.self), for: indexPath) as! ActivityDetailMapCell
-            cell.configure(location: activity.location)
-            cell.selectionStyle = .none
-            return cell
-            
-        default:
-            fatalError("Failed to instantiate the table view cell for detail view controller")
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
+                self.headerView.ratingImage.alpha = 1
+                self.headerView.ratingImage.transform = .identity
+            }
         }
     }
     
@@ -122,4 +88,59 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
         default: break
         }
     }
+    
+    //MARK: -  Favorite Action
+    @IBAction func saveAsFavoriteButtonTapped(sender: UIAction) {
+        self.activity.isFavorite = !self.activity.isFavorite
+        showFavoriteImage()
+        
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.saveContext()
+        }
+    }
+    
+    func showFavoriteImage() {
+        let heartImage = activity.isFavorite ? "heart.fill" : "heart"
+        saveAsFavoriteButton.tintColor = activity.isFavorite ? .systemRed : .white
+        saveAsFavoriteButton.image = UIImage(systemName: heartImage)
+    }
+}
+
+//MARK: - UITableViewDelegate Protocol, UITableViewDataSource Protocol
+extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.row {
+            
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailTextCell.self), for: indexPath) as! ActivityDetailTextCell
+            cell.descriptionLabel.text = activity.summary
+            cell.selectionStyle = .none
+            return cell
+            
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailTwoColumnCell.self), for: indexPath) as! ActivityDetailTwoColumnCell
+            cell.column1TitleLabel.text = "Адрес"
+            cell.column1TextLabel.text = activity.location
+            cell.column2TitleLabel.text = "Телефон"
+            cell.column2TextLabel.text = activity.phone
+            cell.selectionStyle = .none
+            return cell
+            
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailMapCell.self), for: indexPath) as! ActivityDetailMapCell
+            cell.configure(location: activity.location)
+            cell.selectionStyle = .none
+            return cell
+            
+        default:
+            fatalError("Failed to instantiate the table view cell for detail view controller")
+        }
+    }
+    
+
 }
