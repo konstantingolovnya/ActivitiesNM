@@ -15,6 +15,8 @@ class ActivitiesTableViewController: UITableViewController {
 
     var fetchResultController : NSFetchedResultsController<Activity>!
     
+    var searchController: UISearchController!
+    
     //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,16 @@ class ActivitiesTableViewController: UITableViewController {
         tableView.backgroundView = emptyRestaurantView
         
         fetchActivityData()
+        
+        searchController = UISearchController(searchResultsController: nil)
+        
+        tableView.tableHeaderView = searchController.searchBar
+        
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Найти нужную активность..."
+        searchController.searchBar.tintColor = UIColor(named: "NavigationBarTitle")
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,8 +58,14 @@ class ActivitiesTableViewController: UITableViewController {
     }
     
     //MARK: - Fetch Data
-    func fetchActivityData() {
+    func fetchActivityData(searchText: String = "") {
         let fetchRequest = Activity.fetchRequest()
+        
+        if !searchText.isEmpty {
+            fetchRequest.predicate = NSPredicate(format: "location CONTAINS[cd] %@ OR name CONTAINS[cd] %@", searchText, searchText)
+        }
+        
+        
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -65,7 +83,7 @@ class ActivitiesTableViewController: UITableViewController {
         }
     }
     
-    func updateSnapshot() {
+    func updateSnapshot(animatingChange: Bool = true) {
         if let fetchedObjects = fetchResultController.fetchedObjects {
             activities = fetchedObjects
         }
@@ -74,8 +92,8 @@ class ActivitiesTableViewController: UITableViewController {
         snapshot.appendSections([.activities])
         snapshot.appendItems(activities, toSection: .activities)
         
-        dataSource.apply(snapshot)
-        
+        dataSource.apply(snapshot, animatingDifferences: animatingChange)
+
         tableView.backgroundView?.isHidden = !activities.isEmpty
     }
     
@@ -190,8 +208,6 @@ class ActivitiesTableViewController: UITableViewController {
     @IBAction func unwindToHome(seque: UIStoryboardSegue) {
         dismiss(animated: true)
     }
-    
-    
 }
 
 //MARK: - NSFetchedResultsControllerDelegate Protocol
@@ -200,3 +216,16 @@ extension ActivitiesTableViewController: NSFetchedResultsControllerDelegate {
         updateSnapshot()
     }
 }
+
+
+//MARK: - UISearchResultsUpdating Protocol
+extension ActivitiesTableViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else {
+            return
+        }
+        
+        fetchActivityData(searchText: searchText)
+    }
+}
+
