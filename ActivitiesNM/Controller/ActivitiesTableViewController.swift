@@ -57,6 +57,19 @@ class ActivitiesTableViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if UserDefaults.standard.bool(forKey: "hasViewedWalkthrough") {
+            return
+        }
+        
+        let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
+        if let walkthroughViewController = storyboard.instantiateViewController(identifier: "WalkthroughViewController") as? WalkthroughViewController {
+            
+            present(walkthroughViewController, animated: true)
+        }
+    }
+    
     //MARK: - Fetch Data
     func fetchActivityData(searchText: String = "") {
         let fetchRequest = Activity.fetchRequest()
