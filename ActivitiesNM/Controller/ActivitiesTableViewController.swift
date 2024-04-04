@@ -214,6 +214,8 @@ class ActivitiesTableViewController: UITableViewController {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let destinationController = segue.destination as! ActivityDetailViewController
                 destinationController.activity = self.activities[indexPath.row]
+                
+                destinationController.hidesBottomBarWhenPushed = true
             }
         }
     }

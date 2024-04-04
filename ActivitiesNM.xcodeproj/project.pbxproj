@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B566E1B12BBE5CDC00A843B4 /* AboutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E1B02BBE5CDC00A843B4 /* AboutTableViewController.swift */; };
+		B566E1B32BBE67A200A843B4 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E1B22BBE67A200A843B4 /* WebViewController.swift */; };
 		B56E13902B8C0AD7005B027C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E138F2B8C0AD7005B027C /* AppDelegate.swift */; };
 		B56E13922B8C0AD7005B027C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E13912B8C0AD7005B027C /* SceneDelegate.swift */; };
 		B56E13972B8C0AD7005B027C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B56E13952B8C0AD7005B027C /* Main.storyboard */; };
@@ -29,6 +31,7 @@
 		B5ECD36A2B99E0F8005B5F53 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */; };
 		B5ECD3702BA0067A005B5F53 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD36F2BA0067A005B5F53 /* RoundedTextField.swift */; };
 		B5ECD3722BA0081A005B5F53 /* NewActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECD3712BA0081A005B5F53 /* NewActivityController.swift */; };
+		B5FACF6F2BBBC7F100798CB8 /* About.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5FACF6D2BBBC7F100798CB8 /* About.storyboard */; };
 		B5FB85A92BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5FB85A72BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld */; };
 		B5FB85B52BB6718C0085D241 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5FB85B42BB6718C0085D241 /* Onboarding.storyboard */; };
 		B5FB85B72BB677D10085D241 /* WalkthroughContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB85B62BB677D10085D241 /* WalkthroughContentViewController.swift */; };
@@ -37,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B566E1B02BBE5CDC00A843B4 /* AboutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTableViewController.swift; sourceTree = "<group>"; };
+		B566E1B22BBE67A200A843B4 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		B56E138C2B8C0AD7005B027C /* ActivitiesNM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActivitiesNM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56E138F2B8C0AD7005B027C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B56E13912B8C0AD7005B027C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +66,7 @@
 		B5ECD3692B99E0F8005B5F53 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		B5ECD36F2BA0067A005B5F53 /* RoundedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
 		B5ECD3712BA0081A005B5F53 /* NewActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewActivityController.swift; sourceTree = "<group>"; };
+		B5FACF6E2BBBC7F100798CB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ActivitiesNM/Storyboard/Base.lproj/About.storyboard; sourceTree = "<group>"; };
 		B5FB85A82BA2B21E0085D241 /* ActivitiesNM.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ActivitiesNM.xcdatamodel; sourceTree = "<group>"; };
 		B5FB85B42BB6718C0085D241 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
 		B5FB85B62BB677D10085D241 /* WalkthroughContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughContentViewController.swift; sourceTree = "<group>"; };
@@ -125,6 +131,8 @@
 				B5FB85B62BB677D10085D241 /* WalkthroughContentViewController.swift */,
 				B5FB85B82BB68D7B0085D241 /* WalkthroughPageViewController.swift */,
 				B5FB85BA2BB694550085D241 /* WalkthroughViewController.swift */,
+				B566E1B02BBE5CDC00A843B4 /* AboutTableViewController.swift */,
+				B566E1B22BBE67A200A843B4 /* WebViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -182,6 +190,7 @@
 				B56E13952B8C0AD7005B027C /* Main.storyboard */,
 				B56E139A2B8C0AD8005B027C /* LaunchScreen.storyboard */,
 				B5FB85B42BB6718C0085D241 /* Onboarding.storyboard */,
+				B5FACF6D2BBBC7F100798CB8 /* About.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -246,6 +255,7 @@
 			files = (
 				B5ECD34E2B91A2C9005B5F53 /* Nunito-Regular.ttf in Resources */,
 				B56E139C2B8C0AD8005B027C /* LaunchScreen.storyboard in Resources */,
+				B5FACF6F2BBBC7F100798CB8 /* About.storyboard in Resources */,
 				B56E13992B8C0AD8005B027C /* Assets.xcassets in Resources */,
 				B5FB85B52BB6718C0085D241 /* Onboarding.storyboard in Resources */,
 				B5ECD34D2B91A2C9005B5F53 /* Nunito-Bold.ttf in Resources */,
@@ -263,6 +273,7 @@
 				B5ECD3642B97DA7D005B5F53 /* ActivityDetailMapCell.swift in Sources */,
 				B56E13A62B8C116B005B027C /* ActivitiesTableViewCell.swift in Sources */,
 				B5FB85B92BB68D7B0085D241 /* WalkthroughPageViewController.swift in Sources */,
+				B566E1B12BBE5CDC00A843B4 /* AboutTableViewController.swift in Sources */,
 				B5ECD36A2B99E0F8005B5F53 /* ReviewViewController.swift in Sources */,
 				B5ECD35E2B95A551005B5F53 /* NavigationController.swift in Sources */,
 				B56E13A42B8C0B3C005B027C /* ActivitiesTableViewController.swift in Sources */,
@@ -273,6 +284,7 @@
 				B5ECD3542B92CFF2005B5F53 /* ActivityDetailTwoColumnCell.swift in Sources */,
 				B56E13AD2B8C5F79005B027C /* Activity.swift in Sources */,
 				B5ECD3702BA0067A005B5F53 /* RoundedTextField.swift in Sources */,
+				B566E1B32BBE67A200A843B4 /* WebViewController.swift in Sources */,
 				B5FB85B72BB677D10085D241 /* WalkthroughContentViewController.swift in Sources */,
 				B5ECD35C2B95A1BA005B5F53 /* UIColorExtension.swift in Sources */,
 				B5FB85BB2BB694550085D241 /* WalkthroughViewController.swift in Sources */,
@@ -301,6 +313,14 @@
 				B56E139B2B8C0AD8005B027C /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B5FACF6D2BBBC7F100798CB8 /* About.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B5FACF6E2BBBC7F100798CB8 /* Base */,
+			);
+			name = About.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
