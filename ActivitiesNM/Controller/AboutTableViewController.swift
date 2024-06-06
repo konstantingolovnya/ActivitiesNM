@@ -21,7 +21,7 @@ class AboutTableViewController: UITableViewController {
         var image: String
     }
     
-    var sectionContent = [
+    private let sectionContent = [
         [
             LinkItem(
                 text: "Rate us on App Store",
@@ -54,11 +54,13 @@ class AboutTableViewController: UITableViewController {
     ]
     
     lazy var dataSource = configureDataSource()
-
+    
+    //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "О приложении"
         
         if let appearance = navigationController?.navigationBar.standardAppearance {
             
@@ -76,31 +78,29 @@ class AboutTableViewController: UITableViewController {
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
         }
         
+        
+        let header = AboutImageView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height * 0.25))
+        tableView.tableHeaderView = header
+        tableView.register(AboutTableViewCell.self, forCellReuseIdentifier: String(describing: AboutTableViewCell.self))
         tableView.dataSource = dataSource
         updateSnapshot()
     }
     
+    //MARK: - TableViewDiffableDataSource
     func configureDataSource() -> UITableViewDiffableDataSource<Section, LinkItem> {
-        
-        let cellIdentifier = "aboutcell"
-        
+        let cellIdentifier = String(describing: AboutTableViewCell.self)
         let dataSource = UITableViewDiffableDataSource<Section, LinkItem>(tableView: tableView, cellProvider: { tableView, indexPath, linkItem in
-            
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-            
+    
             cell.textLabel?.text = linkItem.text
             cell.imageView?.image = UIImage(named: linkItem.image)
             
             return cell
         })
-        
         return dataSource
     }
     
-   
-    
     func updateSnapshot() {
-        
         var snapshot = NSDiffableDataSourceSnapshot<Section, LinkItem>()
         snapshot.appendSections([.feedback, .followus])
         snapshot.appendItems(sectionContent[0], toSection: .feedback)
@@ -109,11 +109,17 @@ class AboutTableViewController: UITableViewController {
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
+    //MARK: - TableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         switch indexPath.section {
         case 0:
-            performSegue(withIdentifier: "showWebView", sender: self)
+            let destinationController = WebViewController()
+            if let linkItem = self.dataSource.itemIdentifier(for: indexPath) {
+                destinationController.targerURL = linkItem.link
+            }
+            present(destinationController, animated: true)
+            
         case 1:
             openWithSafariViewController(indexPath: indexPath)
         default:
@@ -123,22 +129,11 @@ class AboutTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: false)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "showWebView" {
-            if let destinationController = segue.destination as? WebViewController, let indexPath = tableView.indexPathForSelectedRow, let linkItem = self.dataSource.itemIdentifier(for: indexPath) {
-                
-                destinationController.targerURL = linkItem.link
-            }
-        }
-    }
-    
+    //MARK: - Open SafariViewController
     func openWithSafariViewController(indexPath: IndexPath) {
-        
         guard let linkItem = self.dataSource.itemIdentifier(for: indexPath) else {
             return
         }
-        
         if let url = URL(string: linkItem.link) {
             let safariController = SFSafariViewController(url: url)
             present(safariController, animated: true)

@@ -9,90 +9,75 @@ import UIKit
 
 class ActivityDetailViewController: UIViewController {
     
-    @IBOutlet var tableView: UITableView!
-    @IBOutlet var headerView: ActivityDetailHeaderView!
-    @IBOutlet var saveAsFavoriteButton: UIBarButtonItem!
+    lazy var tableView = UITableView()
     
-    var activity = Activity()
+    var activity: Activity!
     
+    var hasChanges = false
+    
+    var completionHandler: ((Bool) -> Void)?
+    
+    
+    //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.addSubview(tableView)
         
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.backButtonTitle = ""
         
-        headerView.headerImageView.image = UIImage(data: activity.image)
-        headerView.nameLabel.text = activity.name
-        headerView.typeLabel.text = activity.type
+        let saveAsFavoriteButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .done, target: self, action: #selector(saveAsFavoriteButtonTapped))
+        navigationItem.rightBarButtonItem = saveAsFavoriteButton
         
         showFavoriteImage()
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        tableView.separatorStyle = .none
-        tableView.contentInsetAdjustmentBehavior = .never
-        
-        if let rating = activity.rating {
-            headerView.ratingImage.image = UIImage(named: rating.image)
-        }
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        completionHandler?(hasChanges)
+    }
+    
+    //MARK: - Setup TableView
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.frame.size = view.bounds.size
+        tableView.sectionHeaderTopPadding = .zero
+        tableView.contentInsetAdjustmentBehavior = .never
+        tableView.separatorStyle = .none
         
-    }
-    
-    //MARK: - Navigation
-    @IBAction func close(segue: UIStoryboardSegue) {
-        dismiss(animated: true)
-    }
-    
-    @IBAction func rateActivity(segue: UIStoryboardSegue) {
-        guard let identifier = segue.identifier else {
-            return
-        }
+        let headerView = ActivityDetailHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 3))
+        headerView.headerImageView.image = UIImage(data: activity.image)
+        headerView.nameLabel.text = activity.name
+        headerView.typeLabel.text = activity.type
         
-        dismiss(animated: true) {
-            if let rating = Activity.Rating(rawValue: identifier) {
-                self.activity.rating = rating
-                self.headerView.ratingImage.image = UIImage(named: rating.image)
-                
-                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                    appDelegate.saveContext()
-                }
-            }
-            
-            let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-            self.headerView.ratingImage.alpha = 0
-            self.headerView.ratingImage.transform = scaleTransform
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
-                self.headerView.ratingImage.alpha = 1
-                self.headerView.ratingImage.transform = .identity
-            }
+        if let rating = activity.rating {
+            headerView.ratingImage.image = UIImage(named: rating.image)
         }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "showMap":
-            let destinationCintroller = segue.destination as! MapViewController
-            destinationCintroller.activity = activity
-            
-        case "showReview":
-            let destinationController = segue.destination as! ReviewViewController
-            destinationController.activity = activity
-            
-        default: break
-        }
+        tableView.tableHeaderView = headerView
+        
+        let footerView = ActivityDetailFooterView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
+        footerView.rateButton.addTarget(self, action: #selector(rateButtonAction), for: .touchUpInside)
+        tableView.tableFooterView = footerView
+        
+        tableView.register(ActivityDetailTextCell.self, forCellReuseIdentifier: String(describing: ActivityDetailTextCell.self))
+        tableView.register(ActivityDetailTwoColumnCell.self, forCellReuseIdentifier: String(describing: ActivityDetailTwoColumnCell.self))
+        tableView.register(ActivityDetailMapCell.self, forCellReuseIdentifier: String(describing: ActivityDetailMapCell.self))
     }
     
     //MARK: -  Favorite Action
-    @IBAction func saveAsFavoriteButtonTapped(sender: UIAction) {
+    @objc func saveAsFavoriteButtonTapped() {
         self.activity.isFavorite = !self.activity.isFavorite
         showFavoriteImage()
+        hasChanges = true
         
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.saveContext()
@@ -101,8 +86,16 @@ class ActivityDetailViewController: UIViewController {
     
     func showFavoriteImage() {
         let heartImage = activity.isFavorite ? "heart.fill" : "heart"
-        saveAsFavoriteButton.tintColor = activity.isFavorite ? .systemRed : .white
-        saveAsFavoriteButton.image = UIImage(systemName: heartImage)
+        navigationItem.rightBarButtonItem?.tintColor = activity.isFavorite ? .systemRed : .white
+        navigationItem.rightBarButtonItem?.image = UIImage(systemName: heartImage)
+    }
+    
+    @objc private func rateButtonAction() {
+        let destinationController = ReviewViewController()
+        destinationController.activity = activity
+        destinationController.delegate = self
+        
+        present(destinationController, animated: true)
     }
 }
 
@@ -142,5 +135,44 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.row == 2 {
+            let destinationController = MapViewController()
+            destinationController.activity = activity
+            show(destinationController, sender: self)
+        }
+    }
+}
 
+//MARK: - RateActivityDelegate protocol
+extension ActivityDetailViewController: RateActivityDelegate {
+    
+    func rateActivity(rating: String) {
+        
+        self.activity.rating = Activity.Rating(rawValue: rating.lowercased())
+        hasChanges = true
+        
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.saveContext()
+        }
+        dismiss(animated: true) {
+            
+            if let header = self.tableView.tableHeaderView as? ActivityDetailHeaderView {
+                
+                if let rating = self.activity.rating {
+                    header.ratingImage.image = UIImage(named: rating.image)
+                }
+                
+                let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+                header.ratingImage.alpha = 0
+                header.ratingImage.transform = scaleTransform
+                
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
+                    header.ratingImage.alpha = 1
+                    header.ratingImage.transform = .identity
+                }
+            }
+        }
+    }
 }

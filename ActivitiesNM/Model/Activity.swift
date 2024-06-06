@@ -21,10 +21,12 @@ public class Activity: NSManagedObject {
     @NSManaged public var image: Data
     @NSManaged public var ratingText: String?
     @NSManaged public var isFavorite: Bool
+    
+    
 }
 
 extension Activity {
-    enum Rating: String {
+    enum Rating: String, CaseIterable {
             case awesome, good, okay, bad, terrible
     
             var image: String {

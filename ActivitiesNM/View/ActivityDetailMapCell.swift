@@ -10,11 +10,13 @@ import MapKit
 
 class ActivityDetailMapCell: UITableViewCell {
     
-    @IBOutlet var mapView: MKMapView! {
-        didSet {
-            mapView.layer.cornerRadius = 20
-        }
-    }
+   lazy var mapView: MKMapView = {
+        let view = MKMapView()
+            view.layer.cornerRadius = 20
+       view.translatesAutoresizingMaskIntoConstraints = false
+       view.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        return view
+    }()
     
     func configure(location: String) {
         let geoCoder = CLGeocoder()
@@ -40,5 +42,24 @@ class ActivityDetailMapCell: UITableViewCell {
                 }
             }
         }
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setup() {
+        self.contentView.addSubview(mapView)
+        NSLayoutConstraint.activate([
+            mapView.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor),
+            mapView.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor),
+            mapView.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor)
+        ])
     }
 }

@@ -10,9 +10,14 @@ import MapKit
 
 class MapViewController: UIViewController {
     
-    @IBOutlet var mapView: MKMapView!
+    lazy var mapView = MKMapView()
     
     var activity = Activity()
+    
+    //MARK: - View controller life cycle
+    override func loadView() {
+        view = mapView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

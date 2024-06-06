@@ -10,12 +10,14 @@ import WebKit
 
 class WebViewController: UIViewController {
     
-    @IBOutlet var webView: WKWebView!
+    var webView = WKWebView()
     
     var targerURL = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(webView)
+        webView.frame.size = view.bounds.size
         
         if let url = URL(string: targerURL) {
             let request = URLRequest(url: url)

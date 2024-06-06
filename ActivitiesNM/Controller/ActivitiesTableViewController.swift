@@ -9,19 +9,21 @@ import UIKit
 import CoreData
 
 class ActivitiesTableViewController: UITableViewController {
-    
-    @IBOutlet var emptyRestaurantView: UIImageView!
+        
     var activities: [Activity] = []
 
     var fetchResultController : NSFetchedResultsController<Activity>!
     
     var searchController: UISearchController!
     
+    lazy var dataSource = configureDataSource()
+        
     //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.backButtonTitle = ""
+        navigationItem.title = "ActivitiesNM"
         
         if let appearance = navigationController?.navigationBar.standardAppearance {
             appearance.configureWithTransparentBackground()
@@ -35,39 +37,33 @@ class ActivitiesTableViewController: UITableViewController {
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
         }
         
-        tableView.dataSource = dataSource
-        
-        tableView.backgroundView = emptyRestaurantView
-        
-        fetchActivityData()
+        let addNewActivityButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(addNewActivityButtonTapped))
+        navigationItem.rightBarButtonItem = addNewActivityButton
         
         searchController = UISearchController(searchResultsController: nil)
-        
-        tableView.tableHeaderView = searchController.searchBar
-        
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Найти нужную активность..."
         searchController.searchBar.tintColor = UIColor(named: "NavigationBarTitle")
         
+        setupTableView()
+        
+        fetchActivityData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
+        tableView.reloadData()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        
-        if UserDefaults.standard.bool(forKey: "hasViewedWalkthrough") {
-            return
-        }
-        
-        let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
-        if let walkthroughViewController = storyboard.instantiateViewController(identifier: "WalkthroughViewController") as? WalkthroughViewController {
-            
-            present(walkthroughViewController, animated: true)
-        }
+    //MARK: - Setup TableView
+    func setupTableView() {
+        tableView.register(ActivitiesTableViewCell.self, forCellReuseIdentifier: String(describing: ActivitiesTableViewCell.self))
+        tableView.dataSource = dataSource
+        tableView.tableHeaderView = searchController.searchBar
+        tableView.backgroundView = UIImageView(image: UIImage(named: "emptydata"))
+        tableView.backgroundView?.contentMode = .scaleAspectFit
     }
     
     //MARK: - Fetch Data
@@ -77,7 +73,6 @@ class ActivitiesTableViewController: UITableViewController {
         if !searchText.isEmpty {
             fetchRequest.predicate = NSPredicate(format: "location CONTAINS[cd] %@ OR name CONTAINS[cd] %@", searchText, searchText)
         }
-        
         
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
@@ -112,12 +107,9 @@ class ActivitiesTableViewController: UITableViewController {
     
     //MARK: - UITableView Diffable Data Source
     func configureDataSource() -> ActivityTableViewDiffableDataSource {
-                
-        let cellIdentifier = "itemcell"
-        
         let dataSource = ActivityTableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, activity in
                         
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ActivitiesTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivitiesTableViewCell.self), for: indexPath) as! ActivitiesTableViewCell
             
             cell.presentationImageView.image = UIImage(data: activity.image)
             cell.nameLabel.text = activity.name
@@ -130,9 +122,7 @@ class ActivitiesTableViewController: UITableViewController {
         return dataSource
     }
     
-    lazy var dataSource = configureDataSource()
-    
-    //MARK: - UITableViewDelegate Protocol
+    //MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         guard let activity = self.dataSource.itemIdentifier(for: indexPath) else {
@@ -175,7 +165,6 @@ class ActivitiesTableViewController: UITableViewController {
             self.present(activityController, animated: true)
             
             complitionHandler(true)
-            
         }
         
         deleteAction.backgroundColor = UIColor.systemRed
@@ -209,20 +198,21 @@ class ActivitiesTableViewController: UITableViewController {
     }
     
     //MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showActivityDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                let destinationController = segue.destination as! ActivityDetailViewController
-                destinationController.activity = self.activities[indexPath.row]
-                
-                destinationController.hidesBottomBarWhenPushed = true
-            }
-        }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if let indexPath = tableView.indexPathForSelectedRow {
+            let destinationController = ActivityDetailViewController()
+            destinationController.activity = self.activities[indexPath.row]
+            destinationController.hidesBottomBarWhenPushed = true
+            show(destinationController, sender: self)
+            tableView.deselectRow(at: indexPath, animated: true)
+//        }
     }
     
-    @IBAction func unwindToHome(seque: UIStoryboardSegue) {
-        dismiss(animated: true)
+    @objc func addNewActivityButtonTapped (){
+        let destinationController = UINavigationController(rootViewController: NewActivityController())
+        present(destinationController, animated: true)
     }
+    
 }
 
 //MARK: - NSFetchedResultsControllerDelegate Protocol
@@ -231,7 +221,6 @@ extension ActivitiesTableViewController: NSFetchedResultsControllerDelegate {
         updateSnapshot()
     }
 }
-
 
 //MARK: - UISearchResultsUpdating Protocol
 extension ActivitiesTableViewController: UISearchResultsUpdating {

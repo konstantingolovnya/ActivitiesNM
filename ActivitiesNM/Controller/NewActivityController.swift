@@ -8,61 +8,25 @@
 import UIKit
 
 class NewActivityController: UITableViewController {
-    
-    @IBOutlet var photoImageView: UIImageView! {
-        didSet {
-            photoImageView.layer.cornerRadius = 10
-            photoImageView.layer.masksToBounds = true
-        }
-    }
-    
-    @IBOutlet var nameTextField: RoundedTextField! {
-        didSet {
-            nameTextField.tag = 1
-            nameTextField.becomeFirstResponder()
-            nameTextField.delegate = self
-        }
-    }
-    
-    @IBOutlet var typeTextField: RoundedTextField! {
-        didSet {
-            typeTextField.tag = 2
-            typeTextField.delegate = self
-        }
-    }
-    
-    @IBOutlet var addressTextField: RoundedTextField! {
-        didSet {
-            addressTextField.tag = 3
-            addressTextField.delegate = self
-        }
-    }
-    
-    @IBOutlet var phoneTextField: RoundedTextField! {
-        didSet {
-            phoneTextField.tag = 4
-            phoneTextField.delegate = self
-        }
-    }
-    
-    @IBOutlet var descriptionTextView: UITextView! {
-        didSet {
-            descriptionTextView.tag = 5
-            descriptionTextView.layer.cornerRadius = 10
-            descriptionTextView.layer.masksToBounds = true
-        }
-    }
-    
+        
     var activity: Activity!
     
+    private var activityAttributes = [String: String]()
+    
+    private let newActivityLabels = ["НАЗВАНИЕ", "ТИП", "АДРЕС", "ТЕЛЕФОН", "ПРИМЕЧАНИЕ"]
+    private let newActivityBody = ["Введите назнание активности", "Введите тип активности", "Введите адрес активности", "Введите номер телефона активности", "Замечательное место, можно провести здесь выходные."]
+    
+    
+    
+    //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.separatorStyle = .none
+        navigationItem.title = "Новая активность"
         
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-            
-            if let customFont = UIFont(name: "Nunito-Bold", size: 40) {
+        setupTableView()
+        
+        if let appearance = navigationController?.navigationBar.standardAppearance {            if let customFont = UIFont(name: "Nunito-Bold", size: 40) {
                 appearance.titleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!]
                 appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!, .font: customFont]
             }
@@ -72,64 +36,122 @@ class NewActivityController: UITableViewController {
             navigationController?.navigationBar.compactAppearance = appearance
         }
         
-        let margins = photoImageView.superview!.layoutMarginsGuide
+        let saveNewActivityButton = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveNewActivityButtonTapped))
+        navigationItem.rightBarButtonItem = saveNewActivityButton
         
-        photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        photoImageView.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
-        photoImageView.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
-        photoImageView.topAnchor.constraint(equalTo: margins.topAnchor).isActive = true
-        photoImageView.bottomAnchor.constraint(equalTo: margins.bottomAnchor).isActive = true
+//        let tap = UIGestureRecognizer(target: view, action: #selector(UIView.endEditing(_:)))
+//        tap.cancelsTouchesInView = false
+//        view.addGestureRecognizer(tap)
         
-        let tap = UIGestureRecognizer(target: view, action: #selector(UIView.endEditing(_:)))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
     }
     
-    //MARK: - UITableViewDelegate Protocol
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-            let photoSourceRequestController = UIAlertController(title: "", message: "Загрузите фото", preferredStyle: .actionSheet)
-            let cameraAction = UIAlertAction(title: "Сделать фото", style: .default) { action in
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .camera
-                    
-                    self.present(imagePicker, animated: true)
-                    imagePicker.delegate = self
-                }
-            }
-            
-            let photoLibraryAction = UIAlertAction(title: "Выбрать фото", style: .default) { action in
-                if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .photoLibrary
-                    
-                    self.present(imagePicker, animated: true)
-                    imagePicker.delegate = self
-                }
-            }
-            
-            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-            
-            photoSourceRequestController.addAction(cameraAction)
-            photoSourceRequestController.addAction(photoLibraryAction)
-            photoSourceRequestController.addAction(cancelAction)
-            
-            if let popoverController = photoSourceRequestController.popoverPresentationController {
-                if let cell = tableView.cellForRow(at: indexPath) {
-                    popoverController.sourceView = cell
-                    popoverController.sourceRect = cell.bounds
-                }
-            }
-            present(photoSourceRequestController, animated: true)
+    //MARK: - Setup TableView
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.register(NewActivityTextFieldCell.self, forCellReuseIdentifier: String(describing: NewActivityTextFieldCell.self))
+        tableView.register(NewActivityDescriptionTextCell.self, forCellReuseIdentifier: String(describing: NewActivityDescriptionTextCell.self))
+        tableView.register(NewActivityPhotoCell.self, forHeaderFooterViewReuseIdentifier: String(describing: NewActivityPhotoCell.self))
+    }
+    
+    //MARK: - UITableViewDelegate
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return newActivityLabels.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.row {
+        case 0...3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewActivityTextFieldCell.self), for: indexPath) as! NewActivityTextFieldCell
+            cell.label.text = newActivityLabels[indexPath.row]
+            cell.body.placeholder = newActivityBody[indexPath.row]
+            cell.body.tag = indexPath.row
+            cell.body.delegate = self
+            cell.selectionStyle = .none
+            return cell
+        case 4:
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewActivityDescriptionTextCell.self), for: indexPath) as! NewActivityDescriptionTextCell
+            cell.label.text = newActivityLabels[indexPath.row]
+            cell.body.text = newActivityBody[indexPath.row]
+            cell.body.tag = indexPath.row
+            cell.selectionStyle = .none
+            return cell
+        default:
+            fatalError("Failed to instantiate the table view cell for detail view controller")
         }
     }
     
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 200
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: String(describing: NewActivityPhotoCell.self)) as! NewActivityPhotoCell
+        headerView.tapHandler = { [unowned self] _ in
+            headerTappet(headerView: headerView)
+        }
+        return headerView
+    }
+    
+    //MARK: - Adding a photo
+    func headerTappet(headerView: UITableViewHeaderFooterView) {
+        let photoSourceRequestController = UIAlertController(title: "", message: "Загрузите фото", preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: "Сделать фото", style: .default) { action in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .camera
+                
+                self.present(imagePicker, animated: true)
+                imagePicker.delegate = self
+            }
+        }
+        
+        let photoLibraryAction = UIAlertAction(title: "Выбрать фото", style: .default) { action in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .photoLibrary
+                
+                self.present(imagePicker, animated: true)
+                imagePicker.delegate = self
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        photoSourceRequestController.addAction(cameraAction)
+        photoSourceRequestController.addAction(photoLibraryAction)
+        photoSourceRequestController.addAction(cancelAction)
+        
+        if let popoverController = photoSourceRequestController.popoverPresentationController {
+            popoverController.sourceView = headerView
+            popoverController.sourceRect = headerView.bounds
+        }
+        self.present(photoSourceRequestController, animated: true)
+    }
+    
     //MARK: - Save Action
-    @IBAction func saveButtonAction(sender: UIButton) {
-        if nameTextField.text == "" || typeTextField.text == "" || phoneTextField.text == "" || addressTextField.text == "" || descriptionTextView.text == "" {
+    @objc func saveNewActivityButtonTapped() {
+        for i in 0...newActivityLabels.count {
+            let indexPath = IndexPath(row: i, section: 0)
+            if i == newActivityLabels.count - 1 {
+                if let cell = tableView.cellForRow(at: indexPath) as? NewActivityDescriptionTextCell {
+                    if cell.body.text != "" {
+                        activityAttributes[newActivityLabels[i]] = cell.body.text
+                    }
+                }
+            } else {
+                if let cell = tableView.cellForRow(at: indexPath) as? NewActivityTextFieldCell {
+                    if cell.body.text != "" {
+                        activityAttributes[newActivityLabels[i]] = cell.body.text
+                    }
+                }
+            }
+        }
+        
+        if activityAttributes.count != newActivityLabels.count {
             let formValidationController = UIAlertController(title: "Не удалось сохранить", message: "Пожалуйста, заполните все поля.", preferredStyle: .alert)
             let formValidationAction = UIAlertAction(title: "Хорошо", style: .cancel)
             
@@ -143,23 +165,20 @@ class NewActivityController: UITableViewController {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             
             activity = Activity(context: appDelegate.persistentContainer.viewContext)
-            activity.name = nameTextField.text!
-            activity.type = typeTextField.text!
-            activity.phone = phoneTextField.text!
-            activity.location = addressTextField.text!
-            activity.summary = descriptionTextView.text!
+            activity.name = activityAttributes[newActivityLabels[0]]!
+            activity.type = activityAttributes[newActivityLabels[1]]!
+            activity.location = activityAttributes[newActivityLabels[2]]!
+            activity.phone = activityAttributes[newActivityLabels[3]]!
+            activity.summary = activityAttributes[newActivityLabels[4]]!
             activity.isFavorite = false
             
-            if let imageData = photoImageView.image?.pngData() {
-                activity.image = imageData
+            if let headerView = tableView.headerView(forSection: 0) as? NewActivityPhotoCell, let imageData = headerView.photoImageView.image?.pngData() {
+                    activity.image = imageData
             }
-            
             appDelegate.saveContext()
         }
-        
         dismiss(animated: true)
     }
-    
 }
 
 //MARK: - UITextFieldDelegate Protocol
@@ -177,13 +196,14 @@ extension NewActivityController: UITextFieldDelegate {
 extension NewActivityController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            photoImageView.image = selectedImage
-            photoImageView.contentMode = .scaleAspectFill
-            photoImageView.clipsToBounds = true
+
+        if let headerView = tableView.headerView(forSection: 0) as? NewActivityPhotoCell {
+            if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                headerView.photoImageView.image = selectedImage
+                headerView.photoImageView.contentMode = .scaleAspectFill
+                headerView.photoImageView.clipsToBounds = true
+            }
         }
-        
         dismiss(animated: true)
     }
 }

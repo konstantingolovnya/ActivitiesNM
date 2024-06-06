@@ -7,42 +7,56 @@
 
 import UIKit
 
+protocol RateActivityDelegate: AnyObject {
+    func rateActivity(rating: String)
+}
+
 class ReviewViewController: UIViewController {
     
-    @IBOutlet var backgroundImageView: UIImageView!
-    @IBOutlet var closeButton: UIButton!
-    @IBOutlet var rateButtons: [UIButton]!
+    var mainView = ReviewView()
     
     var activity = Activity()
+    
+    weak var delegate: RateActivityDelegate?
 
+    //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        backgroundImageView.image = UIImage(named: activity.name)
-        
-        let blurEffect = UIBlurEffect(style: .dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        backgroundImageView.addSubview(blurEffectView)
+        view.addSubview(mainView)
+        mainView.frame.size = view.bounds.size
+        mainView.backgroundImageView.image = UIImage(data: activity.image)
         
         let scaleUpTransform = CGAffineTransform(scaleX: 10, y: 10)
         
-        for rateButton in rateButtons {
+        for rateButton in mainView.rateButtons {
             rateButton.alpha = 0
             rateButton.transform = scaleUpTransform
+            
+            let action = UIAction { action in
+                if let rating = rateButton.configuration?.title {
+                    self.delegate?.rateActivity(rating: rating)
+                }
+            }
+            rateButton.addAction(action, for: .touchUpInside)
         }
         
         let moveTopTransform = CGAffineTransform(translationX: 0, y: -200)
         
-        closeButton.transform = moveTopTransform
+        mainView.closeButton.transform = moveTopTransform
+        
+        let closeButtonAction = UIAction { action in
+            self.dismiss(animated: true)
+        }
+        mainView.closeButton.addAction(closeButtonAction, for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         UIView.animate(withDuration: 0.5) {
-            self.closeButton.transform = .identity
+            self.mainView.closeButton.transform = .identity
         }
         
-        for rateButton in rateButtons {
+        for rateButton in mainView.rateButtons {
             UIView.animate(withDuration: 0.5) {
                 rateButton.alpha = 1
                 rateButton.transform = .identity
