@@ -9,56 +9,61 @@ import UIKit
 
 class ActivityDetailTwoColumnCell: UITableViewCell {
     
+    private enum Constants {
+        static let stackViewSpacing: CGFloat = 10.0
+        static let labelNumberOfLines = 0
+    }
+    
     lazy var column1TitleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = Constants.labelNumberOfLines
         return label
     }()
     
     lazy var column1TextLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = Constants.labelNumberOfLines
         return label
     }()
     
     lazy var column2TitleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = Constants.labelNumberOfLines
         return label
     }()
     
     lazy var column2TextLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = Constants.labelNumberOfLines
         return label
     }()
     
     lazy var column1StackView: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.alignment = .fill
-        view.distribution = .equalSpacing
-        view.spacing = 10
-        return view
+        let stackView = UIStackView(arrangedSubviews: [column1TitleLabel, column1TextLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = Constants.stackViewSpacing
+        return stackView
     }()
     
     lazy var column2StackView: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.alignment = .fill
-        view.distribution = .equalSpacing
-        view.spacing = 10
-        return view
+        let stackView = UIStackView(arrangedSubviews: [column2TitleLabel, column2TextLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = Constants.stackViewSpacing
+        return stackView
     }()
     
     lazy var stackView: UIStackView = {
-        let view = UIStackView()
-        view.axis = .horizontal
-        view.alignment = .top
-        view.distribution = .fillEqually
-        view.spacing = 10
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+        let stackView = UIStackView(arrangedSubviews: [column1StackView, column2StackView])
+        stackView.axis = .horizontal
+        stackView.alignment = .top
+        stackView.distribution = .fillEqually
+        stackView.spacing = Constants.stackViewSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -70,19 +75,18 @@ class ActivityDetailTwoColumnCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setup() {
-        column1StackView.addArrangedSubview(column1TitleLabel)
-        column1StackView.addArrangedSubview(column1TextLabel)
-        column2StackView.addArrangedSubview(column2TitleLabel)
-        column2StackView.addArrangedSubview(column2TextLabel)
-        stackView.addArrangedSubview(column1StackView)
-        stackView.addArrangedSubview(column2StackView)
-        self.contentView.addSubview(stackView)
+    private func setup() {
+        contentView.addSubview(stackView)
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor)
-            ])
+            stackView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)
+        ])
     }
 }
+

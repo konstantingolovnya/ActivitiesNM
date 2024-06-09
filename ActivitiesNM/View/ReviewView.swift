@@ -9,6 +9,16 @@ import UIKit
 
 class ReviewView: UIView {
     
+    private enum Constants {
+        static let buttonForegroundColor: UIColor = .black
+        static let buttonBackgroundColor: UIColor = .darkGray
+        static let buttonImage: UIImage? = UIImage(systemName: "xmark")
+        static let buttonCornerStyle: UIButton.Configuration.CornerStyle = .capsule
+        static let blurEffectStyle: UIBlurEffect.Style = .dark
+        static let closeButtonTopConstant: CGFloat = 20
+        static let closeButtonTrailingConstant: CGFloat = -20
+    }
+
     lazy var backgroundImageView: UIImageView = {
        let image = UIImageView()
         image.contentMode = .scaleAspectFill
@@ -19,10 +29,10 @@ class ReviewView: UIView {
     
     lazy var closeButton: UIButton = {
         var configuration = UIButton.Configuration.tinted()
-        configuration.baseForegroundColor = .black
-        configuration.background.backgroundColor = .darkGray
-        configuration.image = UIImage(systemName: "xmark")
-        configuration.cornerStyle = .capsule
+        configuration.baseForegroundColor = Constants.buttonForegroundColor
+        configuration.background.backgroundColor = Constants.buttonBackgroundColor
+        configuration.image = Constants.buttonImage
+        configuration.cornerStyle = Constants.buttonCornerStyle
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -33,7 +43,7 @@ class ReviewView: UIView {
         for rating in Activity.Rating.allCases {
             var configuration = UIButton.Configuration.plain()
             configuration.image = UIImage(named: rating.image)
-            configuration.title = rating.rawValue.capitalized  //!
+            configuration.title = rating.rawValue.capitalized
             configuration.baseForegroundColor = .white
             configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
                 var outgoing = incoming
@@ -57,14 +67,14 @@ class ReviewView: UIView {
     }()
     
     lazy var blurEffect: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffect = UIBlurEffect(style: Constants.blurEffectStyle)
         let effect = UIVisualEffectView(effect: blurEffect)
         effect.translatesAutoresizingMaskIntoConstraints = false
         return effect
     }()
     
     init() {
-        super .init(frame: .zero)
+        super.init(frame: .zero)
         setup()
     }
     
@@ -80,7 +90,10 @@ class ReviewView: UIView {
             vStack.addArrangedSubview(button)
         }
         addSubview(vStack)
-        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             blurEffect.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
             blurEffect.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
@@ -91,10 +104,9 @@ class ReviewView: UIView {
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            closeButton.widthAnchor.constraint(equalToConstant: 20),
-//            closeButton.heightAnchor.constraint(equalToConstant: 20),
-            closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            closeButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
+            closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.closeButtonTopConstant),
+            closeButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: Constants.closeButtonTrailingConstant),
             vStack.centerXAnchor.constraint(equalTo: centerXAnchor),
             vStack.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])

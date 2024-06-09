@@ -9,21 +9,29 @@ import UIKit
 
 class ActivitiesTableViewCell: UITableViewCell {
     
-     lazy var nameLabel: UILabel = {
+    private enum Constants {
+        static let cornerRadius: CGFloat = 30
+        static let favoriteImageSize: CGFloat = 20
+        static let presentationImageHeight: CGFloat = 200
+        static let stackViewSpacing: CGFloat = 5
+        static let contentViewMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+    }
+    
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .title2)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-     lazy var locationLabel: UILabel = {
+    lazy var locationLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-     lazy var typeLabel: UILabel = {
+    lazy var typeLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .systemGray
@@ -31,9 +39,9 @@ class ActivitiesTableViewCell: UITableViewCell {
         return label
     }()
     
-     lazy var presentationImageView: UIImageView = {
+    lazy var presentationImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.layer.cornerRadius = 30
+        imageView.layer.cornerRadius = Constants.cornerRadius
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +50,7 @@ class ActivitiesTableViewCell: UITableViewCell {
         return imageView
     }()
     
-     lazy var favoriteImageView: UIImageView = {
+    lazy var favoriteImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "heart.fill")
         imageView.contentMode = .scaleAspectFit
@@ -50,30 +58,30 @@ class ActivitiesTableViewCell: UITableViewCell {
         return imageView
     }()
     
-     lazy var labelsStackView: UIStackView = {
+    lazy var labelsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nameLabel, locationLabel, typeLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .leading
-        stackView.spacing = 3
+        stackView.spacing = Constants.stackViewSpacing
         stackView.distribution = .equalSpacing
         return stackView
     }()
     
-     lazy var descriptionStackView: UIStackView = {
+    lazy var descriptionStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [labelsStackView, favoriteImageView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.alignment = .fill
-        stackView.spacing = 5
+        stackView.spacing = Constants.stackViewSpacing
         return stackView
     }()
     
-     lazy var cellStackView: UIStackView = {
+    lazy var cellStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [presentationImageView, descriptionStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 5
+        stackView.spacing = Constants.stackViewSpacing
         stackView.alignment = .fill
         return stackView
     }()
@@ -90,11 +98,14 @@ class ActivitiesTableViewCell: UITableViewCell {
     private func setup() {
         tintColor = .systemRed
         contentView.addSubview(cellStackView)
-        contentView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        
+        contentView.layoutMargins = Constants.contentViewMargins
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            favoriteImageView.widthAnchor.constraint(equalToConstant: 20),
-            presentationImageView.heightAnchor.constraint(equalToConstant: 200),
+            favoriteImageView.widthAnchor.constraint(equalToConstant: Constants.favoriteImageSize),
+            presentationImageView.heightAnchor.constraint(equalToConstant: Constants.presentationImageHeight),
             
             cellStackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
             cellStackView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
@@ -103,4 +114,5 @@ class ActivitiesTableViewCell: UITableViewCell {
         ])
     }
 }
+
 

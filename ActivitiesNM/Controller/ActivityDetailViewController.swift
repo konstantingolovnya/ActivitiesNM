@@ -17,25 +17,18 @@ class ActivityDetailViewController: UIViewController {
     
     var completionHandler: ((Bool) -> Void)?
     
-    
     //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationItem.backButtonTitle = ""
-        
-        let saveAsFavoriteButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .done, target: self, action: #selector(saveAsFavoriteButtonTapped))
-        navigationItem.rightBarButtonItem = saveAsFavoriteButton
-        
+        setupView()
+        setupNavigationBar()
         showFavoriteImage()
-        
-        setupTableView()
+        tableView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
@@ -45,11 +38,24 @@ class ActivityDetailViewController: UIViewController {
         completionHandler?(hasChanges)
     }
     
-    //MARK: - Setup TableView
-    func setupTableView() {
+    //MARK: - Setup Methods
+    private func setupView() {
+        view.addSubview(tableView)
+        tableView.frame = view.bounds
+        setupTableView()
+    }
+    
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.backButtonTitle = ""
+        
+        let saveAsFavoriteButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .done, target: self, action: #selector(saveAsFavoriteButtonTapped))
+        navigationItem.rightBarButtonItem = saveAsFavoriteButton
+    }
+    
+    private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.frame.size = view.bounds.size
         tableView.sectionHeaderTopPadding = .zero
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.separatorStyle = .none
@@ -73,9 +79,9 @@ class ActivityDetailViewController: UIViewController {
         tableView.register(ActivityDetailMapCell.self, forCellReuseIdentifier: String(describing: ActivityDetailMapCell.self))
     }
     
-    //MARK: -  Favorite Action
-    @objc func saveAsFavoriteButtonTapped() {
-        self.activity.isFavorite = !self.activity.isFavorite
+    //MARK: - Favorite Action
+    @objc private func saveAsFavoriteButtonTapped() {
+        activity.isFavorite.toggle()
         showFavoriteImage()
         hasChanges = true
         
@@ -84,7 +90,7 @@ class ActivityDetailViewController: UIViewController {
         }
     }
     
-    func showFavoriteImage() {
+    private func showFavoriteImage() {
         let heartImage = activity.isFavorite ? "heart.fill" : "heart"
         navigationItem.rightBarButtonItem?.tintColor = activity.isFavorite ? .systemRed : .white
         navigationItem.rightBarButtonItem?.image = UIImage(systemName: heartImage)
@@ -99,7 +105,7 @@ class ActivityDetailViewController: UIViewController {
     }
 }
 
-//MARK: - UITableViewDelegate Protocol, UITableViewDataSource Protocol
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -126,7 +132,7 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
             
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivityDetailMapCell.self), for: indexPath) as! ActivityDetailMapCell
-            cell.configure(location: activity.location)
+            cell.configure(with: activity.location)
             cell.selectionStyle = .none
             return cell
             
@@ -136,7 +142,6 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if indexPath.row == 2 {
             let destinationController = MapViewController()
             destinationController.activity = activity
@@ -145,34 +150,33 @@ extension ActivityDetailViewController: UITableViewDelegate, UITableViewDataSour
     }
 }
 
-//MARK: - RateActivityDelegate protocol
+//MARK: - RateActivityDelegate
 extension ActivityDetailViewController: RateActivityDelegate {
     
     func rateActivity(rating: String) {
-        
-        self.activity.rating = Activity.Rating(rawValue: rating.lowercased())
+        activity.rating = Activity.Rating(rawValue: rating.lowercased())
         hasChanges = true
         
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.saveContext()
         }
         dismiss(animated: true) {
-            
-            if let header = self.tableView.tableHeaderView as? ActivityDetailHeaderView {
-                
-                if let rating = self.activity.rating {
-                    header.ratingImage.image = UIImage(named: rating.image)
-                }
-                
-                let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                header.ratingImage.alpha = 0
-                header.ratingImage.transform = scaleTransform
-                
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
-                    header.ratingImage.alpha = 1
-                    header.ratingImage.transform = .identity
-                }
-            }
+            self.updateHeaderViewWithRating()
+        }
+    }
+    
+    private func updateHeaderViewWithRating() {
+        guard let header = tableView.tableHeaderView as? ActivityDetailHeaderView, let rating = activity.rating else { return }
+        
+        header.ratingImage.image = UIImage(named: rating.image)
+        
+        let scaleTransform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        header.ratingImage.alpha = 0
+        header.ratingImage.transform = scaleTransform
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.7) {
+            header.ratingImage.alpha = 1
+            header.ratingImage.transform = .identity
         }
     }
 }

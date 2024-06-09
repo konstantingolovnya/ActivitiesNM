@@ -11,17 +11,28 @@ import CoreData
 class ActivitiesTableViewController: UITableViewController {
         
     var activities: [Activity] = []
-
-    var fetchResultController : NSFetchedResultsController<Activity>!
-    
+    var fetchResultController: NSFetchedResultsController<Activity>!
     var searchController: UISearchController!
-    
     lazy var dataSource = configureDataSource()
         
-    //MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureNavigationBar()
+        configureAddNewActivityButton()
+        configureBackgroundView()
+        fetchActivityData()
+        configureTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnSwipe = true
+        navigationController?.navigationBar.prefersLargeTitles = true
+        tableView.reloadData()
+    }
+    
+    private func configureNavigationBar() {
         navigationItem.backButtonTitle = ""
         navigationItem.title = "ActivitiesNM"
         
@@ -36,200 +47,151 @@ class ActivitiesTableViewController: UITableViewController {
             navigationController?.navigationBar.compactAppearance = appearance
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
         }
-        
+    }
+    
+    private func configureAddNewActivityButton() {
         let addNewActivityButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(addNewActivityButtonTapped))
         navigationItem.rightBarButtonItem = addNewActivityButton
+    }
+    
+    private func configureBackgroundView() {
+        tableView.backgroundView = UIImageView(image: UIImage(named: "emptydata"))
+        tableView.backgroundView?.contentMode = .scaleAspectFit
+    }
+    
+    private func configureTableView() {
+        tableView.register(ActivitiesTableViewCell.self, forCellReuseIdentifier: String(describing: ActivitiesTableViewCell.self))
+        tableView.dataSource = dataSource
         
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Найти нужную активность..."
         searchController.searchBar.tintColor = UIColor(named: "NavigationBarTitle")
-        
-        setupTableView()
-        
-        fetchActivityData()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.hidesBarsOnSwipe = true
-        navigationController?.navigationBar.prefersLargeTitles = true
-        tableView.reloadData()
-    }
-    
-    //MARK: - Setup TableView
-    func setupTableView() {
-        tableView.register(ActivitiesTableViewCell.self, forCellReuseIdentifier: String(describing: ActivitiesTableViewCell.self))
-        tableView.dataSource = dataSource
         tableView.tableHeaderView = searchController.searchBar
-        tableView.backgroundView = UIImageView(image: UIImage(named: "emptydata"))
-        tableView.backgroundView?.contentMode = .scaleAspectFit
     }
     
-    //MARK: - Fetch Data
-    func fetchActivityData(searchText: String = "") {
+    private func fetchActivityData(searchText: String = "") {
         let fetchRequest = Activity.fetchRequest()
         
         if !searchText.isEmpty {
             fetchRequest.predicate = NSPredicate(format: "location CONTAINS[cd] %@ OR name CONTAINS[cd] %@", searchText, searchText)
         }
         
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            let context = appDelegate.persistentContainer.viewContext
-            fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-            fetchResultController.delegate = self
-            
-            do {
-                try fetchResultController.performFetch()
-                updateSnapshot()
-            } catch {
-                print(error)
-            }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.viewContext
+        fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResultController.delegate = self
+        
+        do {
+            try fetchResultController.performFetch()
+            updateSnapshot()
+        } catch {
+            print(error)
         }
     }
     
-    func updateSnapshot(animatingChange: Bool = true) {
-        if let fetchedObjects = fetchResultController.fetchedObjects {
-            activities = fetchedObjects
-        }
+    private func updateSnapshot(animatingChange: Bool = true) {
+        guard let fetchedObjects = fetchResultController.fetchedObjects else { return }
+        activities = fetchedObjects
         
         var snapshot = NSDiffableDataSourceSnapshot<Categories, Activity>()
         snapshot.appendSections([.activities])
         snapshot.appendItems(activities, toSection: .activities)
         
         dataSource.apply(snapshot, animatingDifferences: animatingChange)
-
         tableView.backgroundView?.isHidden = !activities.isEmpty
     }
     
-    //MARK: - UITableView Diffable Data Source
-    func configureDataSource() -> ActivityTableViewDiffableDataSource {
-        let dataSource = ActivityTableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, activity in
-                        
+    private func configureDataSource() -> ActivityTableViewDiffableDataSource {
+        return ActivityTableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, activity in
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ActivitiesTableViewCell.self), for: indexPath) as! ActivitiesTableViewCell
-            
             cell.presentationImageView.image = UIImage(data: activity.image)
             cell.nameLabel.text = activity.name
             cell.locationLabel.text = activity.location
             cell.typeLabel.text = activity.type
             cell.favoriteImageView.isHidden = !activity.isFavorite
-            
             return cell
         }
-        return dataSource
     }
     
-    //MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let activity = dataSource.itemIdentifier(for: indexPath) else { return UISwipeActionsConfiguration() }
         
-        guard let activity = self.dataSource.itemIdentifier(for: indexPath) else {
-            return UISwipeActionsConfiguration()
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { _, _, completionHandler in
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+            let context = appDelegate.persistentContainer.viewContext
+            context.delete(activity)
+            appDelegate.saveContext()
+            self.updateSnapshot()
+            completionHandler(true)
         }
         
-        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { action, sourceView, complitionHandler in
-            
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                let context = appDelegate.persistentContainer.viewContext
-                
-                context.delete(activity)
-                appDelegate.saveContext()
-                
-                self.updateSnapshot()
-            }
-            
-            complitionHandler(true)
-        }
-        
-        let shareAction = UIContextualAction(style: .normal, title: "Поделиться") { action, sourceView, complitionHandler in
-            
+        let shareAction = UIContextualAction(style: .normal, title: "Поделиться") { _, sourceView, completionHandler in
             let defaultText = "Советую посетить \(activity.type) \(activity.name) в \(activity.location)"
-            
             let activityController: UIActivityViewController
-            
             if let imageToShare = UIImage(named: activity.name) {
                 activityController = UIActivityViewController(activityItems: [defaultText, imageToShare], applicationActivities: nil)
             } else {
                 activityController = UIActivityViewController(activityItems: [defaultText], applicationActivities: nil)
             }
-            
             if let popoverController = activityController.popoverPresentationController {
-                if let cell = tableView.cellForRow(at: indexPath) {
-                    popoverController.sourceView = cell
-                    popoverController.sourceRect = cell.bounds
-                }
+                popoverController.sourceView = sourceView
+                popoverController.sourceRect = sourceView.bounds
             }
-            
             self.present(activityController, animated: true)
-            
-            complitionHandler(true)
+            completionHandler(true)
         }
         
-        deleteAction.backgroundColor = UIColor.systemRed
+        deleteAction.backgroundColor = .systemRed
         deleteAction.image = UIImage(systemName: "trash")
         
-        shareAction.backgroundColor = UIColor.systemOrange
+        shareAction.backgroundColor = .systemOrange
         shareAction.image = UIImage(systemName: "square.and.arrow.up")
         
-        let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
-        return swipeConfiguration
+        return UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let favoriteAction = UIContextualAction(style: .normal, title: nil) { action, sourceView, complitionHandler in
-            
+        let favoriteAction = UIContextualAction(style: .normal, title: nil) { _, _, completionHandler in
             let cell = tableView.cellForRow(at: indexPath) as! ActivitiesTableViewCell
-            
-            self.activities[indexPath.row].isFavorite = !self.activities[indexPath.row].isFavorite
+            self.activities[indexPath.row].isFavorite.toggle()
             cell.favoriteImageView.isHidden = !self.activities[indexPath.row].isFavorite
-            
-            complitionHandler(true)
+            completionHandler(true)
         }
         
-        favoriteAction.backgroundColor = UIColor.systemOrange
+        favoriteAction.backgroundColor = .systemOrange
         let isFavorite = self.activities[indexPath.row].isFavorite ? "heart.slash.fill" : "heart.fill"
         favoriteAction.image = UIImage(systemName: isFavorite)
         
-        let swipeConfiguration = UISwipeActionsConfiguration(actions: [favoriteAction])
-        return swipeConfiguration
+        return UISwipeActionsConfiguration(actions: [favoriteAction])
     }
     
-    //MARK: - Navigation
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if let indexPath = tableView.indexPathForSelectedRow {
-            let destinationController = ActivityDetailViewController()
-            destinationController.activity = self.activities[indexPath.row]
-            destinationController.hidesBottomBarWhenPushed = true
-            show(destinationController, sender: self)
-            tableView.deselectRow(at: indexPath, animated: true)
-//        }
+        let destinationController = ActivityDetailViewController()
+        destinationController.activity = activities[indexPath.row]
+        destinationController.hidesBottomBarWhenPushed = true
+        show(destinationController, sender: self)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    @objc func addNewActivityButtonTapped (){
+    @objc private func addNewActivityButtonTapped() {
         let destinationController = UINavigationController(rootViewController: NewActivityController())
         present(destinationController, animated: true)
     }
-    
 }
 
-//MARK: - NSFetchedResultsControllerDelegate Protocol
 extension ActivitiesTableViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateSnapshot()
     }
 }
 
-//MARK: - UISearchResultsUpdating Protocol
 extension ActivitiesTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text else {
-            return
-        }
-        
+        guard let searchText = searchController.searchBar.text else { return }
         fetchActivityData(searchText: searchText)
     }
 }
-

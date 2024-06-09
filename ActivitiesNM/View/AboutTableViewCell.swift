@@ -9,16 +9,23 @@ import UIKit
 
 class AboutTableViewCell: UITableViewCell {
 
+    private enum Constants {
+        static let font: UIFont = .preferredFont(forTextStyle: .title3)
+        static let baselineAdjustment: UIBaselineAdjustment = .alignBaselines
+        static let lineBreakMode: NSLineBreakMode = .byTruncatingTail
+    }
+    
     lazy var title: UILabel = {
         let title = UILabel()
-        title.font = .preferredFont(forTextStyle: .title3)
-        title.baselineAdjustment = .alignBaselines
-        title.lineBreakMode = .byTruncatingTail
+        title.font = Constants.font
+        title.baselineAdjustment = Constants.baselineAdjustment
+        title.lineBreakMode = Constants.lineBreakMode
+//        title.translatesAutoresizingMaskIntoConstraints = false
         return title
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super .init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
     
@@ -28,5 +35,12 @@ class AboutTableViewCell: UITableViewCell {
     
     private func setup() {
         contentView.addSubview(title)
+//        NSLayoutConstraint.activate([
+//            title.topAnchor.constraint(equalTo: contentView.topAnchor),
+//            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//            title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+//        ])
     }
 }
+

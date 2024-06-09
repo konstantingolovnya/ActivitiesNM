@@ -21,7 +21,6 @@
 		B566E2182BD9EA3D00A843B4 /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E2172BD9EA3D00A843B4 /* DiscoverTableViewController.swift */; };
 		B566E2202BDCAD5200A843B4 /* ActivitiesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E21F2BDCAD5200A843B4 /* ActivitiesData.swift */; };
 		B566E2222BDCAD6300A843B4 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E2212BDCAD6300A843B4 /* NetworkManager.swift */; };
-		B566E2262C045FD800A843B4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E2252C045FD700A843B4 /* File.swift */; };
 		B56E13902B8C0AD7005B027C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E138F2B8C0AD7005B027C /* AppDelegate.swift */; };
 		B56E13922B8C0AD7005B027C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E13912B8C0AD7005B027C /* SceneDelegate.swift */; };
 		B56E13992B8C0AD8005B027C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B56E13982B8C0AD8005B027C /* Assets.xcassets */; };
@@ -44,7 +43,18 @@
 		B5FB85A92BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5FB85A72BA2B21E0085D241 /* ActivitiesNM.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B54C36592C156D71007FD4E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B56E13842B8C0AD7005B027C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B56E138B2B8C0AD7005B027C;
+			remoteInfo = ActivitiesNM;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		B54C36552C156D71007FD4E7 /* ActivitiesNMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActivitiesNMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B566E1B02BBE5CDC00A843B4 /* AboutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTableViewController.swift; sourceTree = "<group>"; };
 		B566E1B22BBE67A200A843B4 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		B566E1B42BC258EE00A843B4 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -59,7 +69,6 @@
 		B566E2172BD9EA3D00A843B4 /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
 		B566E21F2BDCAD5200A843B4 /* ActivitiesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesData.swift; sourceTree = "<group>"; };
 		B566E2212BDCAD6300A843B4 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		B566E2252C045FD700A843B4 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		B56E138C2B8C0AD7005B027C /* ActivitiesNM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActivitiesNM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56E138F2B8C0AD7005B027C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B56E13912B8C0AD7005B027C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +94,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B54C36522C156D71007FD4E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B56E13892B8C0AD7005B027C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -107,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				B56E138C2B8C0AD7005B027C /* ActivitiesNM.app */,
+				B54C36552C156D71007FD4E7 /* ActivitiesNMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,7 +157,6 @@
 				B566E1B02BBE5CDC00A843B4 /* AboutTableViewController.swift */,
 				B566E1B22BBE67A200A843B4 /* WebViewController.swift */,
 				B566E2172BD9EA3D00A843B4 /* DiscoverTableViewController.swift */,
-				B566E2252C045FD700A843B4 /* File.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -205,6 +221,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B54C36542C156D71007FD4E7 /* ActivitiesNMTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B54C365B2C156D71007FD4E7 /* Build configuration list for PBXNativeTarget "ActivitiesNMTests" */;
+			buildPhases = (
+				B54C36512C156D71007FD4E7 /* Sources */,
+				B54C36522C156D71007FD4E7 /* Frameworks */,
+				B54C36532C156D71007FD4E7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B54C365A2C156D71007FD4E7 /* PBXTargetDependency */,
+			);
+			name = ActivitiesNMTests;
+			productName = ActivitiesNMTests;
+			productReference = B54C36552C156D71007FD4E7 /* ActivitiesNMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B56E138B2B8C0AD7005B027C /* ActivitiesNM */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B56E13A02B8C0AD8005B027C /* Build configuration list for PBXNativeTarget "ActivitiesNM" */;
@@ -229,9 +263,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					B54C36542C156D71007FD4E7 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = B56E138B2B8C0AD7005B027C;
+					};
 					B56E138B2B8C0AD7005B027C = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
@@ -251,11 +289,19 @@
 			projectRoot = "";
 			targets = (
 				B56E138B2B8C0AD7005B027C /* ActivitiesNM */,
+				B54C36542C156D71007FD4E7 /* ActivitiesNMTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B54C36532C156D71007FD4E7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B56E138A2B8C0AD7005B027C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -269,6 +315,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B54C36512C156D71007FD4E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B56E13882B8C0AD7005B027C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -278,7 +331,6 @@
 				B56E13A62B8C116B005B027C /* ActivitiesTableViewCell.swift in Sources */,
 				B566E1B12BBE5CDC00A843B4 /* AboutTableViewController.swift in Sources */,
 				B5ECD36A2B99E0F8005B5F53 /* ReviewViewController.swift in Sources */,
-				B566E2262C045FD800A843B4 /* File.swift in Sources */,
 				B566E2202BDCAD5200A843B4 /* ActivitiesData.swift in Sources */,
 				B56E13A42B8C0B3C005B027C /* ActivitiesTableViewController.swift in Sources */,
 				B5ECD3382B901291005B5F53 /* ActivityDetailViewController.swift in Sources */,
@@ -310,7 +362,53 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		B54C365A2C156D71007FD4E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B56E138B2B8C0AD7005B027C /* ActivitiesNM */;
+			targetProxy = B54C36592C156D71007FD4E7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		B54C365C2C156D71007FD4E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 77V265CWY9;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.KonstantinGolovnya.ActivitiesNMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ActivitiesNM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ActivitiesNM";
+			};
+			name = Debug;
+		};
+		B54C365D2C156D71007FD4E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 77V265CWY9;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.KonstantinGolovnya.ActivitiesNMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ActivitiesNM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ActivitiesNM";
+			};
+			name = Release;
+		};
 		B56E139E2B8C0AD8005B027C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -491,6 +589,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B54C365B2C156D71007FD4E7 /* Build configuration list for PBXNativeTarget "ActivitiesNMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B54C365C2C156D71007FD4E7 /* Debug */,
+				B54C365D2C156D71007FD4E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B56E13872B8C0AD7005B027C /* Build configuration list for PBXProject "ActivitiesNM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

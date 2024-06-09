@@ -12,46 +12,52 @@ class MapViewController: UIViewController {
     
     lazy var mapView = MKMapView()
     
-    var activity = Activity()
+    var activity: Activity!
     
     //MARK: - View controller life cycle
     override func loadView() {
         view = mapView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let geoCoder = CLGeocoder()
+        geocodeActivityLocation()
+        setupMapView()
         
-        geoCoder.geocodeAddressString(activity.location) { placemarks, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            if let placemarks = placemarks {
-                let placemark = placemarks[0]
-                
-                if let location = placemark.location {
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = location.coordinate
-                    annotation.title = self.activity.name
-                    annotation.subtitle = self.activity.type
-                    
-                    self.mapView.showAnnotations([annotation], animated: true)
-                    self.mapView.selectAnnotation(annotation, animated: true)
-                }
-            }
-        }
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    //MARK: - Setup Methods
+    private func setupMapView() {
         mapView.delegate = self
         mapView.showsCompass = true
         mapView.showsScale = true
         mapView.showsTraffic = true
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: true)
+    private func geocodeActivityLocation() {
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(activity.location) { placemarks, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            guard let placemarks = placemarks, let placemark = placemarks.first, let location = placemark.location else {
+                return
+            }
+            
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = location.coordinate
+            annotation.title = self.activity.name
+            annotation.subtitle = self.activity.type
+            
+            self.mapView.showAnnotations([annotation], animated: true)
+            self.mapView.selectAnnotation(annotation, animated: true)
+        }
     }
 }
 

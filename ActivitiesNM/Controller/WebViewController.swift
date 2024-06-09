@@ -12,16 +12,22 @@ class WebViewController: UIViewController {
     
     var webView = WKWebView()
     
-    var targerURL = ""
+    var targetURL = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(webView)
         webView.frame.size = view.bounds.size
         
-        if let url = URL(string: targerURL) {
+        loadTargetURL()
+    }
+    
+    private func loadTargetURL() {
+            guard let url = URL(string: targetURL) else {
+                print("Invalid URL string: \(targetURL)")
+                return
+            }
             let request = URLRequest(url: url)
             webView.load(request)
         }
-    }
 }

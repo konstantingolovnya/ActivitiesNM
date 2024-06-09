@@ -9,27 +9,31 @@ import UIKit
 
 class RoundedTextField: UITextField {
     
-    let padding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+    private enum Constants {
+        static let textPadding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+        static let cornerRadius: CGFloat = 10
+        static let borderColor = UIColor.systemGray6.cgColor
+        static let borderWidth: CGFloat = 1
+    }
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: padding)
+        return bounds.inset(by: Constants.textPadding)
     }
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: padding)
+        return bounds.inset(by: Constants.textPadding)
     }
     
     override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: padding)
+        return bounds.inset(by: Constants.textPadding)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.layer.cornerRadius = 10
-        self.layer.borderColor = UIColor.systemGray6.cgColor
-        self.layer.borderWidth = 1
-        self.layer.masksToBounds = true
+        layer.cornerRadius = Constants.cornerRadius
+        layer.borderColor = Constants.borderColor
+        layer.borderWidth = Constants.borderWidth
+        layer.masksToBounds = true
     }
-
 }

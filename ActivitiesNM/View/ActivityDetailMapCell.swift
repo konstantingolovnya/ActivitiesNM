@@ -10,37 +10,42 @@ import MapKit
 
 class ActivityDetailMapCell: UITableViewCell {
     
-   lazy var mapView: MKMapView = {
+    private enum Constants {
+        static let mapViewCornerRadius: CGFloat = 20.0
+        static let mapViewHeight: CGFloat = 200.0
+    }
+    
+     lazy var mapView: MKMapView = {
         let view = MKMapView()
-            view.layer.cornerRadius = 20
-       view.translatesAutoresizingMaskIntoConstraints = false
-       view.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        view.layer.cornerRadius = Constants.mapViewCornerRadius
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: Constants.mapViewHeight).isActive = true
         return view
     }()
     
-    func configure(location: String) {
+    func configure(with location: String) {
         let geoCoder = CLGeocoder()
         
-        geoCoder.geocodeAddressString(location) { placemarks, error in
+        geoCoder.geocodeAddressString(location) { [weak self] placemarks, error in
+            guard let self = self else { return }
+            
             if let error = error {
-                print(error.localizedDescription)
+                print("Geocoding error: \(error.localizedDescription)")
                 return
             }
             
-            if let placemarks = placemarks {
-                let placemark = placemarks[0]
-                
-                let annotation = MKPointAnnotation()
-                
-                if let location = placemark.location {
-                    annotation.coordinate = location.coordinate
-                    
-                    let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
-                    
-                    self.mapView.addAnnotation(annotation)
-                    self.mapView.setRegion(region, animated: true)
-                }
+            guard let placemark = placemarks?.first, let location = placemark.location else {
+                print("No placemarks found")
+                return
             }
+            
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = location.coordinate
+            
+            let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+            
+            self.mapView.addAnnotation(annotation)
+            self.mapView.setRegion(region, animated: true)
         }
     }
     
@@ -53,13 +58,17 @@ class ActivityDetailMapCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setup() {
-        self.contentView.addSubview(mapView)
+    private func setup() {
+        contentView.addSubview(mapView)
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            mapView.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor),
-            mapView.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor),
-            mapView.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor),
-            mapView.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor)
+            mapView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            mapView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            mapView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)
         ])
     }
 }

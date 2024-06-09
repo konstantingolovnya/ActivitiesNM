@@ -14,9 +14,7 @@ protocol RateActivityDelegate: AnyObject {
 class ReviewViewController: UIViewController {
     
     var mainView = ReviewView()
-    
-    var activity = Activity()
-    
+    var activity: Activity!
     weak var delegate: RateActivityDelegate?
 
     //MARK: - View controller life cycle
@@ -27,6 +25,17 @@ class ReviewViewController: UIViewController {
         mainView.frame.size = view.bounds.size
         mainView.backgroundImageView.image = UIImage(data: activity.image)
         
+        setupRateButtons()
+        setupCloseButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        animateButtons()
+    }
+    
+    //MARK: - Setup Methods
+    private func setupRateButtons() {
         let scaleUpTransform = CGAffineTransform(scaleX: 10, y: 10)
         
         for rateButton in mainView.rateButtons {
@@ -40,9 +49,10 @@ class ReviewViewController: UIViewController {
             }
             rateButton.addAction(action, for: .touchUpInside)
         }
-        
+    }
+    
+    private func setupCloseButton() {
         let moveTopTransform = CGAffineTransform(translationX: 0, y: -200)
-        
         mainView.closeButton.transform = moveTopTransform
         
         let closeButtonAction = UIAction { action in
@@ -51,7 +61,7 @@ class ReviewViewController: UIViewController {
         mainView.closeButton.addAction(closeButtonAction, for: .touchUpInside)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    private func animateButtons() {
         UIView.animate(withDuration: 0.5) {
             self.mainView.closeButton.transform = .identity
         }

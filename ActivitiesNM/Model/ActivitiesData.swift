@@ -12,5 +12,10 @@ struct ActivitiesData: Codable {
 }
 
 struct ActivityData: Codable, Hashable {
-    let image, location, name, phone, summary, type: String?
+    let image: String?
+    let location: String?
+    let name: String?
+    let phone: String?
+    let summary: String?
+    let type: String?
 }

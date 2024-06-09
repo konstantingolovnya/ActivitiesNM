@@ -9,15 +9,23 @@ import UIKit
 
 class ActivityDetailFooterView: UIView {
     
+    private enum Constants {
+        static let rateButtonTitle = "Оценить"
+        static let rateButtonFont = UIFont.preferredFont(forTextStyle: .headline)
+        static let rateButtonForegroundColor = UIColor.white
+        static let rateButtonBackgroundColor = UIColor(named: "NavigationBarTitle")
+        static let rateButtonCornerStyle = UIButton.Configuration.CornerStyle.capsule
+    }
+    
     lazy var rateButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
-        configuration.title = "Оценить"
-        configuration.baseForegroundColor = .white
-        configuration.baseBackgroundColor = UIColor(named: "NavigationBarTitle")
-        configuration.cornerStyle = .capsule
+        configuration.title = Constants.rateButtonTitle
+        configuration.baseForegroundColor = Constants.rateButtonForegroundColor
+        configuration.baseBackgroundColor = Constants.rateButtonBackgroundColor
+        configuration.cornerStyle = Constants.rateButtonCornerStyle
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer({ incoming in
             var outgoing = incoming
-            outgoing.font = .preferredFont(forTextStyle: .headline)
+            outgoing.font = Constants.rateButtonFont
             return outgoing
         })
         let button = UIButton(configuration: configuration)
@@ -26,7 +34,7 @@ class ActivityDetailFooterView: UIView {
     }()
     
     override init(frame: CGRect) {
-        super .init(frame: frame)
+        super.init(frame: frame)
         setup()
     }
     
@@ -36,7 +44,10 @@ class ActivityDetailFooterView: UIView {
     
     private func setup() {
         addSubview(rateButton)
-        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             rateButton.topAnchor.constraint(equalTo: topAnchor),
             rateButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
@@ -44,5 +55,5 @@ class ActivityDetailFooterView: UIView {
             rateButton.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
     }
-    
 }
+
